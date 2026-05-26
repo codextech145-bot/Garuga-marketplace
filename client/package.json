@@ -4,13 +4,16 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "set NODE_OPTIONS=--openssl-legacy-provider && vite",
-    "build": "set NODE_OPTIONS=--openssl-legacy-provider && vite build",
-    "preview": "set NODE_OPTIONS=--openssl-legacy-provider && vite preview",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "deploy:cloudflare": "npm run build && npx wrangler pages deploy dist --project-name garuga-marketplace --branch main",
     "admin:server": "node scripts/admin-server.mjs",
     "admin:key": "node scripts/generate-admin-key.mjs",
     "seed:test-users": "node scripts/seed-test-users.mjs"
+  },
+  "engines": {
+    "node": ">=22.12.0"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.3",
