@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garuga — Partnership Strategy Blueprint</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf8f5;
+    --surface: #ffffff;
+    --orange: #ff6b00;
+    --orange-soft: #ff8c2a;
+    --orange-pale: #fff1e6;
+    --orange-pale2: #ffe0c7;
+    --text: #1c1208;
+    --text-mid: #5c4a38;
+    --text-dim: #a89080;
+    --border: #ede8e2;
+    --border-strong: #d8cfc5;
+    --green: #16a34a;
+    --green-pale: #f0fdf4;
+    --blue: #2563eb;
+    --blue-pale: #eff6ff;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
+    --shadow-orange: 0 4px 24px rgba(255,107,0,0.15);
+    --radius: 18px;
+    --radius-sm: 12px;
+    --radius-pill: 100px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .topbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .topbar-logo .logo-box {
+    background: var(--orange-pale);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--orange);
+  }
+
+  .topbar-logo .logo-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+  }
+
+  .topbar-tag {
+    background: var(--orange);
+    color: white;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: var(--radius-pill);
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 6px;
+    padding: 20px 48px 0;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+
+  .tab {
+    padding: 10px 20px;
+    border: none;
+    background: transparent;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    white-space: nowrap;
+    transition: all 0.18s;
+  }
+
+  .tab:hover { color: var(--text); background: var(--bg); }
+  .tab.active { color: var(--orange); border-bottom-color: var(--orange); font-weight: 600; }
+
+  /* MAIN */
+  .main { padding: 40px 48px; max-width: 1100px; }
+
+  .section { display: none; animation: fadeIn 0.25s ease; }
+  .section.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* PAGE HEADER */
+  .page-header { margin-bottom: 36px; }
+  .page-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 40px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+  .page-title span { color: var(--orange); }
+  .page-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* CONDITION BANNER */
+  .condition-banner {
+    background: var(--orange);
+    border-radius: var(--radius);
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 32px;
+    box-shadow: var(--shadow-orange);
+    flex-wrap: wrap;
+  }
+  .condition-banner .cb-icon { font-size: 36px; flex-shrink: 0; }
+  .condition-banner .cb-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 4px;
+  }
+  .condition-banner .cb-desc {
+    font-size: 13px;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.6;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* PARTNER CARDS */
+  .partners-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+    margin-bottom: 32px;
+  }
+
+  .partner-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 26px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .partner-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--orange);
+    border-radius: var(--radius) var(--radius) 0 0;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .partner-card:hover { border-color: var(--orange-pale2); box-shadow: var(--shadow-orange); transform: translateY(-3px); }
+  .partner-card:hover::before { opacity: 1; }
+
+  .partner-card .pc-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .partner-card .pc-icon { font-size: 32px; }
+
+  .partner-card .pc-commission {
+    background: var(--orange-pale);
+    color: var(--orange);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+    letter-spacing: 0.5px;
+  }
+
+  .partner-card .pc-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .partner-card .pc-desc {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  .partner-card .pc-revenue {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  .partner-card .pc-revenue .rev-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .partner-card .pc-revenue .rev-amount {
+    font-family: 'Outfit', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--orange);
+  }
+
+  .partner-card .pc-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+
+  .tag {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .tag-recurring { background: var(--green-pale); color: var(--green); }
+  .tag-high { background: #fef3c7; color: #d97706; }
+  .tag-easy { background: var(--blue-pale); color: var(--blue); }
+  .tag-digital { background: #f5f3ff; color: #7c3aed; }
+
+  /* TOTAL SECTION */
+  .total-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 32px;
+  }
+
+  .total-section .ts-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+
+  .revenue-rows { display: flex; flex-direction: column; gap: 10px; }
+
+  .rev-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+    transition: background 0.15s;
+  }
+
+  .rev-row:hover { background: var(--orange-pale); }
+
+  .rev-row .rr-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .rev-row .rr-icon { font-size: 20px; }
+  .rev-row .rr-name { font-size: 14px; font-weight: 500; color: var(--text); }
+  .rev-row .rr-commission { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+
+  .rev-row .rr-amount {
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--orange);
+  }
+
+  .total-divider { height: 1px; background: var(--border); margin: 12px 0; }
+
+  .total-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 18px;
+    background: var(--orange);
+    border-radius: var(--radius-sm);
+  }
+
+  .total-row .tr-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .total-row .tr-amount {
+    font-family: 'Outfit', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: white;
+  }
+
+  /* APPROACH SECTION */
+  .approach-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .approach-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s;
+  }
+
+  .approach-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+
+  .approach-card .step-num {
+    font-family: 'Outfit', sans-serif;
+    font-size: 40px;
+    font-weight: 800;
+    color: var(--orange-pale2);
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+
+  .approach-card .step-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .approach-card .step-desc {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.7;
+  }
+
+  /* PITCH SECTION */
+  .pitch-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--orange);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 20px;
+  }
+
+  .pitch-box .pb-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 12px;
+  }
+
+  .pitch-box .pb-text {
+    font-family: 'Outfit', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .pitch-box .pb-sub {
+    font-size: 13px;
+    color: var(--text-mid);
+    margin-top: 10px;
+    line-height: 1.7;
+  }
+
+  /* DO / DONT */
+  .do-dont {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .do-card {
+    background: var(--green-pale);
+    border: 1px solid #bbf7d0;
+    border-radius: var(--radius);
+    padding: 22px;
+  }
+
+  .dont-card {
+    background: #fff1f2;
+    border: 1px solid #fecdd3;
+    border-radius: var(--radius);
+    padding: 22px;
+  }
+
+  .do-card .dd-title { font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 700; color: var(--green); margin-bottom: 12px; }
+  .dont-card .dd-title { font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 700; color: #e11d48; margin-bottom: 12px; }
+
+  .dd-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .dd-list li { font-size: 13px; line-height: 1.5; display: flex; gap: 8px; }
+  .do-card .dd-list li { color: #166534; }
+  .dont-card .dd-list li { color: #9f1239; }
+  .do-card .dd-list li::before { content: '✓'; font-weight: 700; flex-shrink: 0; }
+  .dont-card .dd-list li::before { content: '✗'; font-weight: 700; flex-shrink: 0; }
+
+  /* TIMELINE */
+  .roadmap {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .roadmap-item {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .roadmap-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .roadmap-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--orange);
+    background: var(--surface);
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .roadmap-dot.filled { background: var(--orange); }
+
+  .roadmap-line {
+    width: 2px;
+    flex: 1;
+    background: var(--border);
+    margin: 4px 0;
+    min-height: 30px;
+  }
+
+  .roadmap-content {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 18px 22px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .roadmap-content .rc-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    margin-bottom: 8px;
+    display: inline-block;
+  }
+
+  .rc-tag-now { background: var(--orange); color: white; }
+  .rc-tag-soon { background: var(--orange-pale2); color: var(--orange); }
+  .rc-tag-later { background: var(--border); color: var(--text-dim); }
+
+  .roadmap-content .rc-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .roadmap-content .rc-desc {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.65;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 10px; }
+
+  @media (max-width: 700px) {
+    .topbar, .tabs, .main { padding-left: 20px; padding-right: 20px; }
+    .do-dont { grid-template-columns: 1fr; }
+    .page-title { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-logo">
+    <div class="logo-box">🏪 GARUGA</div>
+    <div class="logo-sub">Partnership Strategy Blueprint</div>
+  </div>
+  <div class="topbar-tag">Confidential · 2026</div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="show('overview', this)">📊 Overview</button>
+  <button class="tab" onclick="show('partners', this)">🤝 All Partners</button>
+  <button class="tab" onclick="show('revenue', this)">💰 Revenue Model</button>
+  <button class="tab" onclick="show('approach', this)">🚶 How to Approach</button>
+  <button class="tab" onclick="show('pitch', this)">🎤 The Pitch</button>
+  <button class="tab" onclick="show('roadmap', this)">🗺️ Partnership Roadmap</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- OVERVIEW -->
+  <div class="section active" id="overview">
+    <div class="page-header">
+      <div class="page-title">Partnership <span>Strategy</span></div>
+      <div class="page-desc">// Every partner, commission, and approach for Garuga Marketplace.</div>
+    </div>
+
+    <div class="condition-banner">
+      <div class="cb-icon">🔒</div>
+      <div>
+        <div class="cb-title">Unlock Condition — 100+ Transactions / Month</div>
+        <div class="cb-desc">No partner will take you seriously below this number. Focus on Phase 1 first.<br>Get real buyers and sellers transacting. Then walk into these doors.</div>
+      </div>
+    </div>
+
+    <div class="partners-grid">
+      <div class="partner-card">
+        <div class="pc-header"><div class="pc-icon">⛽</div><div class="pc-commission">1.5% commission</div></div>
+        <div class="pc-name">Petrol Stations</div>
+        <div class="pc-desc">High frequency, recurring. Every vehicle owner refuels weekly. Commission on orders placed through Garuga.</div>
+        <div class="pc-tags"><span class="tag tag-recurring">Recurring</span><span class="tag tag-high">High Volume</span></div>
+        <div class="pc-revenue"><div><div class="rev-label">Monthly Target</div></div><div class="rev-amount">UGX 84K</div></div>
+      </div>
+      <div class="partner-card">
+        <div class="pc-header"><div class="pc-icon">🏭</div><div class="pc-commission">5% wholesale</div></div>
+        <div class="pc-name">Manufacturers</div>
+        <div class="pc-desc">Wholesale commission on bulk orders. High ticket size means significant revenue even at low volume.</div>
+        <div class="pc-tags"><span class="tag tag-high">High Ticket</span><span class="tag tag-easy">Easy Pitch</span></div>
+        <div class="pc-revenue"><div><div class="rev-label">Monthly Target</div></div><div class="rev-amount">UGX 105K</div></div>
+      </div>
+      <div class="partner-card">
+        <div class="pc-header"><div class="pc-icon">🌍</div><div class="pc-commission">3% shipment</div></div>
+        <div class="pc-name">International Suppliers</div>
+        <div class="pc-desc">Commission on international shipments routed through Garuga. Highest single revenue stream.</div>
+        <div class="pc-tags"><span class="tag tag-high">Highest Revenue</span></div>
+        <div class="pc-revenue"><div><div class="rev-label">Monthly Target</div></div><div class="rev-amount">UGX 140K</div></div>
+      </div>
+      <div class="partner-card">
+        <div class="pc-header"><div class="pc-icon">💧</div><div class="pc-commission">commission/order</div></div>
+        <div class="pc-name">Water Companies</div>
+        <div class="pc-desc">Jerry can delivery is massive in Entebbe. People order weekly. Zero digital competition in this space.</div>
+        <div class="pc-tags"><span class="tag tag-recurring">Recurring</span><span class="tag tag-easy">Easy Win</span></div>
+        <div class="pc-revenue"><div><div class="rev-label">Opportunity</div></div><div class="rev-amount">🔥 High</div></div>
+      </div>
+      <div class="partner-card">
+        <div class="pc-header"><div class="pc-icon">🛢️</div><div class="pc-commission">commission/order</div></div>
+        <div class="pc-name">Gas / LPG Suppliers</div>
+        <div class="pc-desc">Cooking gas refills are recurring monthly purchases. Every household needs this. Predictable revenue.</div>
+        <div class="pc-tags"><span class="tag tag-recurring">Recurring</span><span class="tag tag-high">High Frequency</span></div>
+        <div class="pc-revenue"><div><div class="rev-label">Opportunity</div></div><div class="rev-amount">🔥 High</div></div>
+      </div>
+      <div class="partner-card">
+        <div class="pc-header"><div class="pc-icon">💊</div><div class="pc-commission">commission/sale</div></div>
+        <div class="pc-name">Pharmacies</div>
+        <div class="pc-desc">Medicine reorders are recurring. People buy monthly. Trust is key — verified pharmacy badge drives conversions.</div>
+        <div class="pc-tags"><span class="tag tag-recurring">Recurring</span></div>
+        <div class="pc-revenue"><div><div class="rev-label">Opportunity</div></div><div class="rev-amount">💪 Strong</div></div>
+      </div>
+      <div class="partner-card">
+        <div class="pc-header"><div class="pc-icon">🛒</div><div class="pc-commission">commission/sale</div></div>
+        <div class="pc-name">Supermarkets</div>
+        <div class="pc-desc">Online grocery orders. High basket size, weekly frequency. Entebbe has several that lack digital presence.</div>
+        <div class="pc-tags"><span class="tag tag-recurring">Recurring</span><span class="tag tag-high">High Basket</span></div>
+        <div class="pc-revenue"><div><div class="rev-label">Opportunity</div></div><div class="rev-amount">💪 Strong</div></div>
+      </div>
+      <div class="partner-card">
+        <div class="pc-header"><div class="pc-icon">🔨</div><div class="pc-commission">1-2% commission</div></div>
+        <div class="pc-name">Hardware Suppliers</div>
+        <div class="pc-desc">Construction is constant in Entebbe. High ticket size — even 1-2% commission is significant per order.</div>
+        <div class="pc-tags"><span class="tag tag-high">High Ticket</span></div>
+        <div class="pc-revenue"><div><div class="rev-label">Opportunity</div></div><div class="rev-amount">💪 Strong</div></div>
+      </div>
+      <div class="partner-card">
+        <div class="pc-header"><div class="pc-icon">🍗</div><div class="pc-commission">commission/order</div></div>
+        <div class="pc-name">Poultry / Meat Suppliers</div>
+        <div class="pc-desc">Restaurants and homes order weekly. Perishable goods need reliable ordering — Garuga fills that gap.</div>
+        <div class="pc-tags"><span class="tag tag-recurring">Recurring</span><span class="tag tag-easy">Easy Approach</span></div>
+        <div class="pc-revenue"><div><div class="rev-label">Opportunity</div></div><div class="rev-amount">💪 Strong</div></div>
+      </div>
+      <div class="partner-card">
+        <div class="pc-header"><div class="pc-icon">📶</div><div class="pc-commission">reseller margin</div></div>
+        <div class="pc-name">Airtime / Data Resellers</div>
+        <div class="pc-desc">Digital, zero logistics. These are aggressive entrepreneurs already — easiest sell on the list. Daily transactions.</div>
+        <div class="pc-tags"><span class="tag tag-digital">Digital</span><span class="tag tag-easy">Easiest Win</span><span class="tag tag-recurring">Daily</span></div>
+        <div class="pc-revenue"><div><div class="rev-label">Opportunity</div></div><div class="rev-amount">⚡ Fast</div></div>
+      </div>
+      <div class="partner-card">
+        <div class="pc-header"><div class="pc-icon">🏫</div><div class="pc-commission">listing + commission</div></div>
+        <div class="pc-name">Schools</div>
+        <div class="pc-desc">Uniforms, stationery, supplies. Parents already need this. Schools have built-in audiences you can tap.</div>
+        <div class="pc-tags"><span class="tag tag-easy">Built-in Audience</span></div>
+        <div class="pc-revenue"><div><div class="rev-label">Opportunity</div></div><div class="rev-amount">🎯 Strategic</div></div>
+      </div>
+      <div class="partner-card">
+        <div class="pc-header"><div class="pc-icon">🛵</div><div class="pc-commission">per delivery fee</div></div>
+        <div class="pc-name">Boda Boda Stages</div>
+        <div class="pc-desc">Built-in delivery network. Revenue share per delivery completed. They already know every address on Garuga road.</div>
+        <div class="pc-tags"><span class="tag tag-easy">Built-in Network</span><span class="tag tag-recurring">Recurring</span></div>
+        <div class="pc-revenue"><div><div class="rev-label">Opportunity</div></div><div class="rev-amount">🎯 Strategic</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PARTNERS -->
+  <div class="section" id="partners">
+    <div class="page-header">
+      <div class="page-title">All <span>Partners</span></div>
+      <div class="page-desc">// Ranked by priority and ease of conversion.</div>
+    </div>
+
+    <div class="condition-banner">
+      <div class="cb-icon">⚡</div>
+      <div>
+        <div class="cb-title">Start With These 3 First</div>
+        <div class="cb-desc">Airtime resellers → Water companies → Boda boda stages.<br>Lowest barrier. Fastest yes. Immediate transactions.</div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:12px;">
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <div style="font-size:28px;">📶</div>
+        <div style="flex:1;min-width:200px;">
+          <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:16px;color:var(--text);margin-bottom:4px;">Airtime & Data Resellers</div>
+          <div style="font-size:12px;color:var(--text-mid);">Easiest yes. Digital product, zero logistics, aggressive sellers. Approach today.</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <span class="tag tag-easy">Priority 1</span>
+          <span class="tag tag-digital">Digital</span>
+          <span style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;color:var(--orange);">⚡ Now</span>
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <div style="font-size:28px;">💧</div>
+        <div style="flex:1;min-width:200px;">
+          <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:16px;color:var(--text);margin-bottom:4px;">Water Companies</div>
+          <div style="font-size:12px;color:var(--text-mid);">Weekly recurring orders. Zero digital competition. Walk in tomorrow morning.</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <span class="tag tag-easy">Priority 2</span>
+          <span class="tag tag-recurring">Recurring</span>
+          <span style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;color:var(--orange);">⚡ Now</span>
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <div style="font-size:28px;">🛵</div>
+        <div style="flex:1;min-width:200px;">
+          <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:16px;color:var(--text);margin-bottom:4px;">Boda Boda Stages</div>
+          <div style="font-size:12px;color:var(--text-mid);">Your delivery network. They know every address. Revenue share per drop.</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <span class="tag tag-easy">Priority 3</span>
+          <span class="tag tag-recurring">Delivery</span>
+          <span style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;color:var(--orange);">⚡ Now</span>
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <div style="font-size:28px;">🍗</div>
+        <div style="flex:1;min-width:200px;">
+          <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:16px;color:var(--text);margin-bottom:4px;">Poultry / Meat Suppliers</div>
+          <div style="font-size:12px;color:var(--text-mid);">Weekly orders from restaurants and homes. Predictable, recurring revenue.</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <span class="tag tag-recurring">Priority 4</span>
+          <span style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;color:var(--orange-soft);">Soon</span>
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <div style="font-size:28px;">🛢️</div>
+        <div style="flex:1;min-width:200px;">
+          <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:16px;color:var(--text);margin-bottom:4px;">Gas / LPG Suppliers</div>
+          <div style="font-size:12px;color:var(--text-mid);">Monthly cooking gas refills. Every household. Predictable demand.</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <span class="tag tag-recurring">Priority 5</span>
+          <span style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;color:var(--orange-soft);">Soon</span>
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <div style="font-size:28px;">⛽</div>
+        <div style="flex:1;min-width:200px;">
+          <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:16px;color:var(--text);margin-bottom:4px;">Petrol Stations</div>
+          <div style="font-size:12px;color:var(--text-mid);">1.5% commission. High frequency. UGX 84K/month target. After 100 transactions.</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <span class="tag tag-high">Priority 6</span>
+          <span style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;color:var(--text-dim);">After 100 tx</span>
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <div style="font-size:28px;">🏭</div>
+        <div style="flex:1;min-width:200px;">
+          <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:16px;color:var(--text);margin-bottom:4px;">Manufacturers</div>
+          <div style="font-size:12px;color:var(--text-mid);">5% wholesale. High ticket. UGX 105K/month target. After 100 transactions.</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <span class="tag tag-high">Priority 7</span>
+          <span style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;color:var(--text-dim);">After 100 tx</span>
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <div style="font-size:28px;">🌍</div>
+        <div style="flex:1;min-width:200px;">
+          <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:16px;color:var(--text);margin-bottom:4px;">International Suppliers</div>
+          <div style="font-size:12px;color:var(--text-mid);">3% shipment. Highest single revenue stream. UGX 140K/month target.</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <span class="tag tag-high">Priority 8</span>
+          <span style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;color:var(--text-dim);">After 100 tx</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- REVENUE -->
+  <div class="section" id="revenue">
+    <div class="page-header">
+      <div class="page-title">Revenue <span>Model</span></div>
+      <div class="page-desc">// Commission structure and monthly targets.</div>
+    </div>
+
+    <div class="total-section">
+      <div class="ts-title">Confirmed Partnership Revenue Targets</div>
+      <div class="revenue-rows">
+        <div class="rev-row">
+          <div class="rr-left">
+            <div class="rr-icon">⛽</div>
+            <div>
+              <div class="rr-name">Petrol Stations</div>
+              <div class="rr-commission">1.5% commission per transaction</div>
+            </div>
+          </div>
+          <div class="rr-amount">UGX 84K</div>
+        </div>
+        <div class="rev-row">
+          <div class="rr-left">
+            <div class="rr-icon">🏭</div>
+            <div>
+              <div class="rr-name">Manufacturers</div>
+              <div class="rr-commission">5% wholesale commission</div>
+            </div>
+          </div>
+          <div class="rr-amount">UGX 105K</div>
+        </div>
+        <div class="rev-row">
+          <div class="rr-left">
+            <div class="rr-icon">🌍</div>
+            <div>
+              <div class="rr-name">International Suppliers</div>
+              <div class="rr-commission">3% shipment commission</div>
+            </div>
+          </div>
+          <div class="rr-amount">UGX 140K</div>
+        </div>
+        <div class="total-divider"></div>
+        <div class="total-row">
+          <div>
+            <div class="tr-label">Total Monthly · After Tax</div>
+          </div>
+          <div class="tr-amount">UGX 340K</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow-sm);">
+      <div style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:16px;">Additional Revenue Streams (Unquantified)</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;">
+        <div style="background:var(--bg);border-radius:var(--radius-sm);padding:16px;">
+          <div style="font-size:22px;margin-bottom:8px;">💧</div>
+          <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;margin-bottom:4px;">Water Delivery</div>
+          <div style="font-size:12px;color:var(--text-dim);">Commission per order. Weekly recurring.</div>
+        </div>
+        <div style="background:var(--bg);border-radius:var(--radius-sm);padding:16px;">
+          <div style="font-size:22px;margin-bottom:8px;">🛢️</div>
+          <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;margin-bottom:4px;">Gas / LPG</div>
+          <div style="font-size:12px;color:var(--text-dim);">Commission per refill. Monthly recurring.</div>
+        </div>
+        <div style="background:var(--bg);border-radius:var(--radius-sm);padding:16px;">
+          <div style="font-size:22px;margin-bottom:8px;">📶</div>
+          <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;margin-bottom:4px;">Airtime / Data</div>
+          <div style="font-size:12px;color:var(--text-dim);">Reseller margin. Daily transactions.</div>
+        </div>
+        <div style="background:var(--bg);border-radius:var(--radius-sm);padding:16px;">
+          <div style="font-size:22px;margin-bottom:8px;">🛵</div>
+          <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;margin-bottom:4px;">Boda Delivery</div>
+          <div style="font-size:12px;color:var(--text-dim);">Revenue share per delivery drop.</div>
+        </div>
+        <div style="background:var(--bg);border-radius:var(--radius-sm);padding:16px;">
+          <div style="font-size:22px;margin-bottom:8px;">🏫</div>
+          <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;margin-bottom:4px;">Schools</div>
+          <div style="font-size:12px;color:var(--text-dim);">Listing fees + commission on supplies.</div>
+        </div>
+        <div style="background:var(--bg);border-radius:var(--radius-sm);padding:16px;">
+          <div style="font-size:22px;margin-bottom:8px;">🔨</div>
+          <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;margin-bottom:4px;">Hardware</div>
+          <div style="font-size:12px;color:var(--text-dim);">1-2% on high ticket construction orders.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPROACH -->
+  <div class="section" id="approach">
+    <div class="page-header">
+      <div class="page-title">How to <span>Approach</span></div>
+      <div class="page-desc">// The exact steps to walk in and close a partner.</div>
+    </div>
+
+    <div class="do-dont">
+      <div class="do-card">
+        <div class="dd-title">✅ Always Do</div>
+        <ul class="dd-list">
+          <li>Ask specifically for the owner — not staff</li>
+          <li>Go in the morning, slow hours</li>
+          <li>Show the live platform on your phone</li>
+          <li>Keep the pitch to one sentence</li>
+          <li>Start with people you know personally</li>
+          <li>Let them sign up on the spot</li>
+        </ul>
+      </div>
+      <div class="dont-card">
+        <div class="dd-title">✗ Never Do</div>
+        <ul class="dd-list">
+          <li>Talk to staff — they'll say no automatically</li>
+          <li>Go during busy peak hours</li>
+          <li>Bring a pitch document or brochure</li>
+          <li>Ask for money upfront</li>
+          <li>Approach more than 3 at once — focus</li>
+          <li>Promise features you haven't built yet</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="approach-grid">
+      <div class="approach-card">
+        <div class="step-num">01</div>
+        <div class="step-title">List 10 Shops You Know</div>
+        <div class="step-desc">Warm connections convert 3x faster than cold walks. Write down 10 specific business owners on Garuga road you know personally. Start there before approaching strangers.</div>
+      </div>
+      <div class="approach-card">
+        <div class="step-num">02</div>
+        <div class="step-title">Walk In — Morning Only</div>
+        <div class="step-desc">Weekday mornings 8am–11am. Owners are present, not busy. Afternoons they're rushed. Evenings they're tired. Morning is the only time you get a real conversation.</div>
+      </div>
+      <div class="approach-card">
+        <div class="step-num">03</div>
+        <div class="step-title">Show — Don't Tell</div>
+        <div class="step-desc">Open garuga-marketplace.web.app on your phone. Show them existing listings. Show them the categories. A live product beats any explanation. Let them see it working.</div>
+      </div>
+      <div class="approach-card">
+        <div class="step-num">04</div>
+        <div class="step-title">One Sentence Pitch</div>
+        <div class="step-desc">"I list your products on Garuga Marketplace, customers order online, you pay me a small commission only when you make a sale. No upfront cost." Then stop talking.</div>
+      </div>
+      <div class="approach-card">
+        <div class="step-num">05</div>
+        <div class="step-title">Sign Up On the Spot</div>
+        <div class="step-desc">If they say yes, list their first product right there with them. Don't leave and say "I'll add you later." The moment you walk out without listing, the deal is 50% dead.</div>
+      </div>
+      <div class="approach-card">
+        <div class="step-num">06</div>
+        <div class="step-title">WhatsApp Follow Up</div>
+        <div class="step-desc">Get their WhatsApp number. Send them the link to their listing same day. People who see their own shop live become invested. That's your retention hook.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PITCH -->
+  <div class="section" id="pitch">
+    <div class="page-header">
+      <div class="page-title">The <span>Pitch</span></div>
+      <div class="page-desc">// Exactly what to say. Nothing more.</div>
+    </div>
+
+    <div class="pitch-box">
+      <div class="pb-label">Universal One-Liner</div>
+      <div class="pb-text">"I list your products on Garuga Marketplace, customers order online, you pay me a small commission only when you make a sale. No upfront cost."</div>
+      <div class="pb-sub">Then stop talking. Let them respond. Silence after a pitch is not awkward — it's the moment they decide. Don't fill it.</div>
+    </div>
+
+    <div class="pitch-box">
+      <div class="pb-label">For Delivery Partners (Bodas)</div>
+      <div class="pb-text">"When an order comes in on Garuga Marketplace near you, I send it to you. You deliver it. I pay you per drop. You keep riding — just add deliveries on top."</div>
+      <div class="pb-sub">Bodas respond to immediate income. No monthly commitment. Per delivery. That's the hook.</div>
+    </div>
+
+    <div class="pitch-box">
+      <div class="pb-label">If They Ask "How Does It Work?"</div>
+      <div class="pb-text">"Customer sees your product, taps order, you get notified, you confirm, boda delivers or they pick up. You get paid directly — I just take my cut."</div>
+      <div class="pb-sub">Keep it simple. They don't need to understand technology. They need to understand money.</div>
+    </div>
+
+    <div class="pitch-box">
+      <div class="pb-label">If They Say "I'll Think About It"</div>
+      <div class="pb-text">"No problem. Let me just list one product for you now for free — if you don't like it I remove it. Nothing to lose."</div>
+      <div class="pb-sub">Get something listed. A free first listing converts skeptics into believers faster than any conversation.</div>
+    </div>
+  </div>
+
+  <!-- ROADMAP -->
+  <div class="section" id="roadmap">
+    <div class="page-header">
+      <div class="page-title">Partnership <span>Roadmap</span></div>
+      <div class="page-desc">// The exact order to pursue each partner type.</div>
+    </div>
+
+    <div class="roadmap">
+      <div class="roadmap-item">
+        <div class="roadmap-left">
+          <div class="roadmap-dot filled"></div>
+          <div class="roadmap-line"></div>
+        </div>
+        <div class="roadmap-content">
+          <span class="rc-tag rc-tag-now">Right Now</span>
+          <div class="rc-title">Phase 0 — Seed Partners (No Transaction Threshold)</div>
+          <div class="rc-desc">Airtime & data resellers, water companies, boda boda stages, poultry/meat suppliers. These don't require 100 transactions. Walk in tomorrow. They need zero convincing because you're offering free exposure with commission only on sales.</div>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="roadmap-left">
+          <div class="roadmap-dot filled"></div>
+          <div class="roadmap-line"></div>
+        </div>
+        <div class="roadmap-content">
+          <span class="rc-tag rc-tag-now">Building Now</span>
+          <div class="rc-title">Phase 1 — Regular Sellers</div>
+          <div class="rc-desc">Individual sellers on Garuga road. Electronics, clothing, food, services. Physical marketing today. WhatsApp group sharing. Goal: 10 active sellers, 50+ listings before rebuilding on garuga.web.app.</div>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="roadmap-left">
+          <div class="roadmap-dot"></div>
+          <div class="roadmap-line"></div>
+        </div>
+        <div class="roadmap-content">
+          <span class="rc-tag rc-tag-soon">After 50 transactions</span>
+          <div class="rc-title">Phase 2 — Local Institutions</div>
+          <div class="rc-desc">Pharmacies, supermarkets, hardware shops, gas/LPG suppliers, schools. These need to see some traction before they commit. 50 transactions is enough to show them the platform is real and active.</div>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="roadmap-left">
+          <div class="roadmap-dot"></div>
+          <div class="roadmap-line"></div>
+        </div>
+        <div class="roadmap-content">
+          <span class="rc-tag rc-tag-soon">After 100 transactions</span>
+          <div class="rc-title">Phase 3 — Big Partnership Targets</div>
+          <div class="rc-desc">Petrol stations (1.5%), manufacturers (5%), international suppliers (3%). These are the UGX 340K/month deals. They will ask for proof of volume. 100+ monthly transactions is your proof. Come with data, not just a pitch.</div>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="roadmap-left">
+          <div class="roadmap-dot"></div>
+        </div>
+        <div class="roadmap-content">
+          <span class="rc-tag rc-tag-later">Phase 2 of Platform</span>
+          <div class="rc-title">Phase 4 — AI-Powered Partner Management</div>
+          <div class="rc-desc">Once the AI OS is live, partner onboarding, commission tracking, and payout management become automated. Partners get dashboards. You get passive income. The system runs itself.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function show(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>

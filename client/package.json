@@ -1,0 +1,34 @@
+{
+  "name": "garuga-marketplace",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "set NODE_OPTIONS=--openssl-legacy-provider && vite",
+    "build": "set NODE_OPTIONS=--openssl-legacy-provider && vite build",
+    "preview": "set NODE_OPTIONS=--openssl-legacy-provider && vite preview",
+    "deploy:cloudflare": "npm run build && npx wrangler pages deploy dist --project-name garuga-marketplace --branch main",
+    "admin:server": "node scripts/admin-server.mjs",
+    "admin:key": "node scripts/generate-admin-key.mjs",
+    "seed:test-users": "node scripts/seed-test-users.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.105.3",
+    "leaflet": "^1.9.4",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-router-dom": "^7.14.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.2.0",
+    "eslint": "^9.39.4",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.4.0",
+    "vite": "^7.3.2",
+    "vite-plugin-pwa": "^1.3.0"
+  }
+}

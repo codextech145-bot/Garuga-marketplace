@@ -1,0 +1,50 @@
+# Firebase leftovers
+.firebase/
+.firebase_config/
+
+# Dependencies and build output
+node_modules/
+client/node_modules/
+client/dist/
+dist/
+dist-ssr/
+
+# Local deploy/tool folders
+.netlify/
+client/.netlify/
+supabase/.temp/
+
+# Environment variables
+.env
+.env.local
+.env.production
+client/.env
+client/.env.local
+client/.env.production
+*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Local secret/test notes
+admin key
+dd
+accounts.txt
+
+# Local AI/editor/workspace folders
+.claude/
+.qwen/
+.vscode/
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

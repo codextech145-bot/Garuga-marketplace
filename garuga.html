@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GARUGA — City OS Vision</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --green: #00ff88;
+    --green-dim: #00cc6a;
+    --green-dark: #003322;
+    --white: #f0f0f0;
+    --grey: #1a1a1a;
+    --grey2: #252525;
+    --grey3: #333;
+    --text-dim: #888;
+    --accent: #ff6b35;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* GRID BACKGROUND */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    z-index: 1;
+    padding: 60px 40px 40px;
+    border-bottom: 1px solid var(--grey3);
+  }
+
+  .hero-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(60px, 12vw, 120px);
+    line-height: 0.9;
+    color: var(--white);
+    letter-spacing: 2px;
+  }
+
+  .hero-title span {
+    color: var(--green);
+  }
+
+  .hero-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 20px;
+    max-width: 500px;
+    line-height: 1.6;
+  }
+
+  .mission-bar {
+    margin-top: 30px;
+    padding: 16px 20px;
+    border-left: 3px solid var(--green);
+    background: var(--green-dark);
+    font-size: 14px;
+    color: var(--green);
+    font-family: 'Space Mono', monospace;
+    line-height: 1.5;
+  }
+
+  /* NAV BUTTONS */
+  .nav {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 24px 40px;
+    border-bottom: 1px solid var(--grey3);
+    background: rgba(10,10,10,0.8);
+    position: sticky;
+    top: 0;
+    backdrop-filter: blur(10px);
+  }
+
+  .nav-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border: 1px solid var(--grey3);
+    background: transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .nav-btn:hover, .nav-btn.active {
+    border-color: var(--green);
+    color: var(--green);
+    background: var(--green-dark);
+  }
+
+  /* MAIN */
+  .main {
+    position: relative;
+    z-index: 1;
+    padding: 40px;
+    max-width: 1100px;
+  }
+
+  /* SECTIONS */
+  .section {
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .section.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: var(--white);
+    margin-bottom: 6px;
+    letter-spacing: 2px;
+  }
+
+  .section-title span { color: var(--green); }
+
+  .section-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 32px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* CARDS GRID */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .card {
+    background: var(--grey);
+    border: 1px solid var(--grey3);
+    padding: 24px;
+    transition: border-color 0.2s;
+  }
+
+  .card:hover { border-color: var(--green); }
+
+  .card-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  .card-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--green);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .card-body {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+
+  .card-body li {
+    list-style: none;
+    padding: 3px 0;
+    border-bottom: 1px solid var(--grey2);
+  }
+
+  .card-body li::before {
+    content: '→ ';
+    color: var(--green);
+    font-size: 11px;
+  }
+
+  /* DIFFERENTIATOR CARD */
+  .diff-card {
+    background: var(--green-dark);
+    border: 1px solid var(--green);
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  .diff-card .card-title { color: var(--green); }
+  .diff-card .card-body { color: #aaffcc; }
+
+  /* PHASE TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 30px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--green), transparent);
+  }
+
+  .phase {
+    position: relative;
+    margin-bottom: 32px;
+    padding: 24px;
+    background: var(--grey);
+    border: 1px solid var(--grey3);
+  }
+
+  .phase::before {
+    content: '';
+    position: absolute;
+    left: -34px;
+    top: 28px;
+    width: 10px;
+    height: 10px;
+    background: var(--green);
+    border-radius: 50%;
+  }
+
+  .phase-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--green);
+    margin-bottom: 6px;
+  }
+
+  .phase-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+
+  .phase-body {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+
+  .phase-status {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 4px 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .status-now { background: var(--green); color: var(--black); }
+  .status-next { border: 1px solid var(--accent); color: var(--accent); }
+  .status-future { border: 1px solid var(--grey3); color: var(--text-dim); }
+
+  /* BLUEPRINT */
+  .blueprint {
+    background: var(--grey);
+    border: 1px solid var(--grey3);
+    padding: 32px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--text-dim);
+  }
+
+  .bp-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--grey2);
+  }
+
+  .bp-label {
+    min-width: 160px;
+    color: var(--green);
+    font-weight: 700;
+  }
+
+  .bp-value { color: var(--white); }
+
+  /* IDEAS */
+  .idea-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+  }
+
+  .idea-item {
+    padding: 20px;
+    border: 1px dashed var(--grey3);
+    background: var(--grey);
+    transition: all 0.2s;
+  }
+
+  .idea-item:hover {
+    border-color: var(--accent);
+    border-style: solid;
+  }
+
+  .idea-icon { font-size: 24px; margin-bottom: 8px; }
+
+  .idea-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .idea-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--green); }
+
+  @media (max-width: 600px) {
+    .hero { padding: 40px 20px 30px; }
+    .nav { padding: 16px 20px; }
+    .main { padding: 24px 20px; }
+    .section-title { font-size: 36px; }
+    .bp-row { flex-direction: column; gap: 4px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">// Entebbe City OS — Master Vision Document</div>
+  <div class="hero-title">GAR<span>UGA</span></div>
+  <div class="hero-sub">One app. One city. Every service, every person, every opportunity — inside one ecosystem.</div>
+  <div class="mission-bar">
+    MISSION: Reduce unemployment the modern way. Every youth can affiliate and earn.<br>
+    Every skilled person without a job can find work through this platform.
+  </div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="show('marketplace')">Marketplace</button>
+  <button class="nav-btn" onclick="show('differentiator')">Differentiator</button>
+  <button class="nav-btn" onclick="show('monetization')">Monetization</button>
+  <button class="nav-btn" onclick="show('phases')">Build Phases</button>
+  <button class="nav-btn" onclick="show('blueprint')">Blueprint</button>
+  <button class="nav-btn" onclick="show('ideas')">Future Ideas</button>
+</div>
+
+<div class="main">
+
+  <!-- MARKETPLACE -->
+  <div class="section active" id="marketplace">
+    <div class="section-title">MARKET<span>PLACE</span></div>
+    <div class="section-desc">// Phase 1 — Build this first. Everything starts here.</div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">🏪</div>
+        <div class="card-title">Sellers</div>
+        <ul class="card-body">
+          <li>Register shop with profile</li>
+          <li>Add products with images & prices</li>
+          <li>Unique QR code per shop</li>
+          <li>Manage listings from dashboard</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🛒</div>
+        <div class="card-title">Buyers</div>
+        <ul class="card-body">
+          <li>Browse by category → see shops first</li>
+          <li>Nearest shops load first (location)</li>
+          <li>View shop → then browse products</li>
+          <li>Order and pay via mobile money</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🔗</div>
+        <div class="card-title">Affiliates</div>
+        <ul class="card-body">
+          <li>Any user can become an affiliate</li>
+          <li>Share product/shop links</li>
+          <li>Earn commission on every sale</li>
+          <li>Track earnings on dashboard</li>
+          <li>Payout via MTN / Airtel</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🚴</div>
+        <div class="card-title">Delivery</div>
+        <ul class="card-body">
+          <li>Delivery personnel register</li>
+          <li>Auto-assigned to nearby orders</li>
+          <li>Track delivery status live</li>
+          <li>Earnings paid via mobile money</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">💼</div>
+        <div class="card-title">Jobs Board</div>
+        <ul class="card-body">
+          <li>Post formal and informal jobs</li>
+          <li>Skilled youth list their services</li>
+          <li>Employers search and hire</li>
+          <li>Categories: Tech, Driving, Cooking, etc.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">⚙️</div>
+        <div class="card-title">Admin Panel</div>
+        <ul class="card-body">
+          <li>Full dashboard: users, orders, revenue</li>
+          <li>Passkey authentication</li>
+          <li>Approve / reject listings</li>
+          <li>Analytics and moderation tools</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">💳</div>
+        <div class="card-title">Payments</div>
+        <ul class="card-body">
+          <li>MTN Mobile Money</li>
+          <li>Airtel Money</li>
+          <li>Flutterwave (long-term)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🤖</div>
+        <div class="card-title">AI Integration</div>
+        <ul class="card-body">
+          <li>Smart recommendations</li>
+          <li>Automated seller support</li>
+          <li>Fraud & moderation detection</li>
+          <li>Job-to-seeker matching</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIFFERENTIATOR -->
+  <div class="section" id="differentiator">
+    <div class="section-title">WHAT MAKES IT <span>DIFFERENT</span></div>
+    <div class="section-desc">// This is what no other marketplace in Uganda does.</div>
+
+    <div class="diff-card">
+      <div class="card-icon">🏬</div>
+      <div class="card-title">Shop-First Discovery</div>
+      <div class="card-body">
+        Most marketplaces show you products. Garuga shows you SHOPS.<br><br>
+        User selects a category → they see shops near them, not random products.<br>
+        This mirrors how Garuga road actually works in real life — you trust a shop, not a product on the ground.<br><br>
+        Nearest shops appear first. Verified shops get their own highlighted section at the top.
+      </div>
+    </div>
+
+    <div class="diff-card">
+      <div class="card-icon">📍</div>
+      <div class="card-title">Location-First</div>
+      <div class="card-body">
+        Location required on entry. Every result is proximity-based.<br>
+        Hyperlocal by design — built for Garuga road first, then all of Entebbe.<br>
+        No one else is doing this for this market.
+      </div>
+    </div>
+
+    <div class="diff-card">
+      <div class="card-icon">✅</div>
+      <div class="card-title">Verification Badge Psychology</div>
+      <div class="card-body">
+        Unverified shops are still visible — we don't lock anyone out.<br>
+        But verified shops sit in a premium section above the rest.<br>
+        Sellers feel the difference. They upgrade without being forced.<br>
+        That's how you monetize without killing the community.
+      </div>
+    </div>
+  </div>
+
+  <!-- MONETIZATION -->
+  <div class="section" id="monetization">
+    <div class="section-title">MONEY<span>IZATION</span></div>
+    <div class="section-desc">// Every stream listed. This is how Garuga makes money.</div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <div class="card-title">Commission</div>
+        <div class="card-body">Percentage cut on every completed sale through the platform.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🚀</div>
+        <div class="card-title">Featured Listings</div>
+        <div class="card-body">Sellers pay to boost their shop or product to top of results.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">✅</div>
+        <div class="card-title">Verification Badge</div>
+        <div class="card-body">Paid badge. Gives sellers a premium section placement and trust signal.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">📰</div>
+        <div class="card-title">News Posting Fee</div>
+        <div class="card-body">Businesses pay to post announcements or ads in the community news section.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">💎</div>
+        <div class="card-title">Seller Subscriptions</div>
+        <div class="card-body">Monthly tiers unlocking more listings, analytics, and platform tools.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔗</div>
+        <div class="card-title">Affiliate Commissions</div>
+        <div class="card-body">Platform takes a share of every affiliate-driven sale.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASES -->
+  <div class="section" id="phases">
+    <div class="section-title">BUILD <span>PHASES</span></div>
+    <div class="section-desc">// The exact order. Do not skip steps.</div>
+
+    <div class="timeline">
+      <div class="phase">
+        <div class="phase-num">// PHASE 01</div>
+        <div class="phase-title">Finish Garuga Marketplace</div>
+        <div class="phase-body">
+          Core platform live on Garuga road. Sellers, buyers, affiliates, delivery, jobs board, payments, admin panel. Shop-first discovery with location. Verification badges active. Get real users. Get real revenue.
+        </div>
+        <span class="phase-status status-now">BUILD NOW</span>
+      </div>
+
+      <div class="phase">
+        <div class="phase-num">// PHASE 02</div>
+        <div class="phase-title">Build the AI OS — Garuga Edition</div>
+        <div class="phase-body">
+          The AI OS is built with one job: make Garuga better. Multi-agent system. Each agent handles a specific function — recommendations, fraud detection, job matching, automation. Plugs into Claude, Gemini, GPT and picks the best for each task.
+        </div>
+        <span class="phase-status status-next">AFTER PHASE 01</span>
+      </div>
+
+      <div class="phase">
+        <div class="phase-num">// PHASE 03</div>
+        <div class="phase-title">Expand Garuga into Super App</div>
+        <div class="phase-body">
+          Rides & school pickup. TikTok-style local feed. WhatsApp-style chat & status. Subscription streaming TV. Digital products marketplace. Online tutoring. Community news. The AI OS powers all of it.
+        </div>
+        <span class="phase-status status-future">FUTURE</span>
+      </div>
+
+      <div class="phase">
+        <div class="phase-num">// PHASE 04</div>
+        <div class="phase-title">Scale Across Entebbe + AI OS Goes Global</div>
+        <div class="phase-body">
+          Garuga becomes the city OS for all of Entebbe. Every person. Every service. Every digital need — inside one platform. The AI OS grows beyond Garuga — autonomous income generation, device diagnostics, cross-system intelligence.
+        </div>
+        <span class="phase-status status-future">LONG TERM</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLUEPRINT -->
+  <div class="section" id="blueprint">
+    <div class="section-title">TECH <span>BLUEPRINT</span></div>
+    <div class="section-desc">// Stack, structure, and architecture at a glance.</div>
+
+    <div class="blueprint">
+      <div class="bp-row">
+        <div class="bp-label">FRONTEND</div>
+        <div class="bp-value">React (Vite)</div>
+      </div>
+      <div class="bp-row">
+        <div class="bp-label">DATABASE</div>
+        <div class="bp-value">Firebase Firestore</div>
+      </div>
+      <div class="bp-row">
+        <div class="bp-label">AUTH</div>
+        <div class="bp-value">Firebase Authentication + Passkey (admin)</div>
+      </div>
+      <div class="bp-row">
+        <div class="bp-label">IMAGES</div>
+        <div class="bp-value">ImgBB</div>
+      </div>
+      <div class="bp-row">
+        <div class="bp-label">PAYMENTS</div>
+        <div class="bp-value">MTN MoMo → Airtel Money → Flutterwave</div>
+      </div>
+      <div class="bp-row">
+        <div class="bp-label">LOCATION</div>
+        <div class="bp-value">Browser Geolocation API → Firestore geo queries</div>
+      </div>
+      <div class="bp-row">
+        <div class="bp-label">AI OS STACK</div>
+        <div class="bp-value">Multi-agent (Claude + Gemini + GPT) — Phase 2</div>
+      </div>
+      <div class="bp-row">
+        <div class="bp-label">PLATFORM URL</div>
+        <div class="bp-value">garuga.web.app</div>
+      </div>
+      <div class="bp-row">
+        <div class="bp-label">USER TYPES</div>
+        <div class="bp-value">Seller / Buyer / Affiliate / Delivery / Admin</div>
+      </div>
+      <div class="bp-row">
+        <div class="bp-label">DISCOVERY MODEL</div>
+        <div class="bp-value">Category → Nearest Shops → Products (never product-first)</div>
+      </div>
+      <div class="bp-row">
+        <div class="bp-label">LAUNCH MARKET</div>
+        <div class="bp-value">Garuga Road, Entebbe, Uganda</div>
+      </div>
+      <div class="bp-row">
+        <div class="bp-label">SCALE TARGET</div>
+        <div class="bp-value">All of Entebbe — then beyond</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FUTURE IDEAS -->
+  <div class="section" id="ideas">
+    <div class="section-title">FUTURE <span>IDEAS</span></div>
+    <div class="section-desc">// Not building yet. Just locked in as the vision.</div>
+
+    <div class="idea-grid">
+      <div class="idea-item">
+        <div class="idea-icon">🚗</div>
+        <div class="idea-name">Rides & School Pickup</div>
+        <div class="idea-desc">Uber-like rides with a focus on safe school transport for Entebbe families.</div>
+      </div>
+      <div class="idea-item">
+        <div class="idea-icon">📱</div>
+        <div class="idea-name">TikTok Local Feed</div>
+        <div class="idea-desc">Short video feed for local news, entertainment, and business promotion in the area.</div>
+      </div>
+      <div class="idea-item">
+        <div class="idea-icon">💬</div>
+        <div class="idea-name">Chat & Status</div>
+        <div class="idea-desc">WhatsApp-style messaging and status updates built natively into the platform.</div>
+      </div>
+      <div class="idea-item">
+        <div class="idea-icon">🎬</div>
+        <div class="idea-name">Streaming TV</div>
+        <div class="idea-desc">Subscription-based movie and series streaming — local and international content.</div>
+      </div>
+      <div class="idea-item">
+        <div class="idea-icon">🎮</div>
+        <div class="idea-name">Digital Products</div>
+        <div class="idea-desc">Marketplace for games, eBooks, software, templates, and all digital goods.</div>
+      </div>
+      <div class="idea-item">
+        <div class="idea-icon">📰</div>
+        <div class="idea-name">Community News</div>
+        <div class="idea-desc">Hyperlocal news feed. Garuga and Entebbe events, alerts, and announcements.</div>
+      </div>
+      <div class="idea-item">
+        <div class="idea-icon">📚</div>
+        <div class="idea-name">Online Tutoring</div>
+        <div class="idea-desc">Connect students with local tutors. Skilled teachers earn. Youth get educated.</div>
+      </div>
+      <div class="idea-item">
+        <div class="idea-icon">🧠</div>
+        <div class="idea-name">Full AI OS</div>
+        <div class="idea-desc">Autonomous multi-agent system. Goes beyond Garuga. Handles complex online tasks, device diagnostics, income generation.</div>
+      </div>
+      <div class="idea-item">
+        <div class="idea-icon">🌍</div>
+        <div class="idea-name">Super App Expansion</div>
+        <div class="idea-desc">Combine everything — every feature above — into one platform every person in Entebbe uses daily.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function show(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+    window.scrollTo({ top: document.querySelector('.main').offsetTop - 70, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
