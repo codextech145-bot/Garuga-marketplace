@@ -1,4 +1,13 @@
 {
+  "name": "garuga-marketplace-root",
+  "private": true,
+  "scripts": {
+    "build": "npm install --prefix client --no-audit --progress=false && npm --prefix client run build",
+    "deploy:cloudflare": "npm --prefix client run deploy:cloudflare"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "dependencies": {
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.105.3"
