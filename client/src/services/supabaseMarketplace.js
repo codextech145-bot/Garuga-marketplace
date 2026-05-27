@@ -895,7 +895,7 @@ export async function startMarketplaceConversation({
     ? query.eq('product_id', productId)
     : itemId
       ? query.eq('item_id', itemId)
-      : query.eq('shop_id', shopId)
+      : query.eq('shop_id', shopId).is('product_id', null).is('item_id', null)
 
   const { data: existing, error: existingError } = await scopedQuery.maybeSingle()
   if (existingError) throw existingError

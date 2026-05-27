@@ -469,6 +469,10 @@ create unique index if not exists marketplace_conversations_item_unique_idx
   on public.marketplace_conversations(buyer_id, seller_id, item_id)
   where item_id is not null;
 
+create unique index if not exists marketplace_conversations_shop_unique_idx
+  on public.marketplace_conversations(buyer_id, seller_id, shop_id)
+  where shop_id is not null and product_id is null and item_id is null;
+
 create index if not exists marketplace_conversations_buyer_idx on public.marketplace_conversations(buyer_id, last_message_at desc);
 create index if not exists marketplace_conversations_seller_idx on public.marketplace_conversations(seller_id, last_message_at desc);
 

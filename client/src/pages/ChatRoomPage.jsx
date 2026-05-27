@@ -20,6 +20,7 @@ function ChatRoomPage() {
   const [conversation, setConversation] = useState(null)
   const [messages, setMessages] = useState([])
   const [message, setMessage] = useState('')
+  const [offerAmount, setOfferAmount] = useState('')
   const [loading, setLoading] = useState(true)
   const [sending, setSending] = useState(false)
   const [error, setError] = useState('')
@@ -87,6 +88,46 @@ function ChatRoomPage() {
     }
   }
 
+  const sendActionMessage = async (text, messageType = 'system') => {
+    if (!user || sending) return
+    setSending(true)
+    setError('')
+    try {
+      await sendMarketplaceMessage({
+        conversationId,
+        senderId: user.id,
+        senderName: profile?.name || user.email || 'Garuga user',
+        senderRole: role || 'buyer',
+        message: text,
+        messageType,
+      })
+      setOfferAmount('')
+    } catch (actionError) {
+      console.error(actionError)
+      setError('Could not send action.')
+    } finally {
+      setSending(false)
+    }
+  }
+
+  const handleMakeOffer = () => {
+    const amount = Number(offerAmount)
+    if (!amount || amount < 1) {
+      setError('Enter a valid offer amount first.')
+      return
+    }
+    sendActionMessage(`Offer made: ${formatMoney(amount)}. Please confirm if this price works.`, 'offer')
+  }
+
+  const handleBookPickup = () => {
+    const code = String(Math.floor(1000 + Math.random() * 9000))
+    sendActionMessage(`Pickup booking requested. Buyer pickup code: ${code}. Seller should ask for this code before handing over the item.`, 'booking')
+  }
+
+  const handleRequestDelivery = () => {
+    sendActionMessage('Delivery requested. Please confirm item availability, pickup point, delivery location, and the best delivery category: boda, car, or truck.', 'booking')
+  }
+
   const product = conversation?.productSnapshot || {}
   const otherSide = conversation?.sellerId === user?.id ? 'Buyer' : 'Seller'
 
@@ -122,6 +163,28 @@ function ChatRoomPage() {
           </div>
         ) : null}
 
+        {conversation ? (
+          <div className="chat-deal-actions">
+            <div>
+              <strong>Deal actions</strong>
+              <span>Use these to keep negotiation structured and safer.</span>
+            </div>
+            <label>
+              Offer amount
+              <input
+                type="number"
+                min="1"
+                value={offerAmount}
+                onChange={(event) => setOfferAmount(event.target.value)}
+                placeholder="e.g. 45000"
+              />
+            </label>
+            <button className="btn-back" type="button" onClick={handleMakeOffer} disabled={sending}>Make offer</button>
+            <button className="btn-back" type="button" onClick={handleBookPickup} disabled={sending}>Book pickup</button>
+            <button className="btn-primary" type="button" onClick={handleRequestDelivery} disabled={sending}>Request delivery</button>
+          </div>
+        ) : null}
+
         <div className="chat-message-list" ref={listRef}>
           {messages.length === 0 ? (
             <p className="empty-message">No messages yet. Start with a clear question.</p>
@@ -129,7 +192,7 @@ function ChatRoomPage() {
             messages.map((chatMessage) => {
               const mine = chatMessage.senderId === user?.id
               return (
-                <article key={chatMessage.id} className={`chat-message ${mine ? 'mine' : ''}`}>
+                <article key={chatMessage.id} className={`chat-message ${mine ? 'mine' : ''} ${chatMessage.messageType !== 'text' ? 'action' : ''}`}>
                   <div>
                     <strong>{chatMessage.senderName || chatMessage.senderRole}</strong>
                     <span>{formatMessageTime(chatMessage.createdAt)}</span>

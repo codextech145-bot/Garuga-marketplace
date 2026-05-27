@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import ShopTrustBadge from '../components/ShopTrustBadge'
 import { useAuth } from '../contexts/AuthContext'
-import { createOrder, getPublicShopByCodeOrId, listShopProducts } from '../services/supabaseMarketplace'
+import { createOrder, getPublicShopByCodeOrId, listShopProducts, startMarketplaceConversation } from '../services/supabaseMarketplace'
 import { DELIVERY_CATEGORIES, formatMoney, getDeliveryCategory, getSellerLanguage } from '../utils/marketplace'
 import { withTimeout } from '../utils/async'
 import { addCartItem, getCartCount, readCart, writeCart } from '../utils/cart'
@@ -19,7 +19,8 @@ function createDeliveryConfirmationCode() {
 function ShopPage() {
   const { shopId } = useParams()
   const location = useLocation()
-  const { user, profile } = useAuth()
+  const navigate = useNavigate()
+  const { user, profile, role } = useAuth()
   const [shop, setShop] = useState(null)
   const [products, setProducts] = useState([])
   const [selected, setSelected] = useState(null)
@@ -97,6 +98,39 @@ function ShopPage() {
     writeCart(nextCart)
     setCartCount(getCartCount(nextCart))
     setCardQuantities((current) => ({ ...current, [product.id]: 1 }))
+  }
+
+  const handleTalkToShop = async () => {
+    if (!shop) return
+    if (!user) {
+      navigate('/login')
+      return
+    }
+    if (shop.ownerId === user.id) {
+      setError('This is your own shop.')
+      return
+    }
+
+    try {
+      const conversation = await startMarketplaceConversation({
+        buyerId: user.id,
+        sellerId: shop.ownerId,
+        shopId: shop.id,
+        productSnapshot: {
+          name: shop.name,
+          shopName: shop.name,
+          category: shop.businessCategoryLabel,
+          url: `/shop/${shop.shopCode || shop.id}`,
+        },
+        openingMessage: `Hi ${shop.name}, I want to ask about your shop.`,
+        senderName: profile?.name || user.email || 'Garuga buyer',
+        senderRole: role || 'buyer',
+      })
+      navigate(`/chats/${conversation.id}`)
+    } catch (chatError) {
+      console.error(chatError)
+      setError(chatError.message || 'Could not start shop chat.')
+    }
   }
 
   const updateCardQuantity = (productId, value) => {
@@ -180,6 +214,9 @@ function ShopPage() {
             <span>{shop?.phone || 'No phone listed'}</span>
             {shop?.location ? <span>{shop.location}</span> : null}
             {shop?.phone ? <a className="btn-back" href={`tel:${shop.phone}`}>Call shop</a> : null}
+            <button className="btn-back" type="button" onClick={handleTalkToShop} disabled={!shop || shop.ownerId === user?.id}>
+              Talk to shop
+            </button>
           </div>
         </div>
         <Link to={user ? '/dashboard/buyer' : '/'} className="btn-back">

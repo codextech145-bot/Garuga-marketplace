@@ -67,7 +67,10 @@ function ChatsPage() {
             <h3>Messages</h3>
             <p className="market-muted">Signed in as {profile?.name || user?.email || 'Garuga user'}.</p>
           </div>
-          <Link to="/" className="btn-back">Find products</Link>
+          <div className="market-actions">
+            <Link to="/dashboard/buyer/shops" className="btn-primary">Browse shops</Link>
+            <Link to="/" className="btn-back">Find products</Link>
+          </div>
         </div>
 
         {loading ? <p className="empty-message">Loading chats...</p> : null}
@@ -76,7 +79,7 @@ function ChatsPage() {
         {!loading && conversations.length === 0 ? (
           <div className="empty-message chat-empty-state">
             <strong>No chats yet.</strong>
-            <span>Open a product and tap Chat seller to start negotiating.</span>
+            <span>Open a shop or product and tap Chat seller to start negotiating.</span>
           </div>
         ) : null}
 

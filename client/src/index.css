@@ -5727,6 +5727,40 @@ main.home-main .item-card .price {
     background: var(--surface-muted);
 }
 
+.chat-deal-actions {
+    display: grid;
+    grid-template-columns: minmax(180px, 1fr) minmax(160px, 220px) auto auto auto;
+    align-items: end;
+    gap: 0.75rem;
+    padding: 0.85rem;
+    border: 1px solid rgba(249, 115, 22, 0.24);
+    border-radius: 18px;
+    background: #fff7ed;
+}
+
+.chat-deal-actions strong,
+.chat-deal-actions span {
+    display: block;
+}
+
+.chat-deal-actions span {
+    color: #9a3412;
+    font-size: 0.82rem;
+}
+
+.chat-deal-actions label {
+    display: grid;
+    gap: 0.25rem;
+    color: #7c2d12;
+    font-size: 0.78rem;
+    font-weight: 900;
+}
+
+.chat-deal-actions input {
+    min-width: 0;
+    background: #ffffff;
+}
+
 .chat-product-strip div {
     flex: 1;
     min-width: 0;
@@ -5759,6 +5793,22 @@ main.home-main .item-card .price {
     color: #ffffff;
 }
 
+.chat-message.action {
+    border: 1px solid rgba(249, 115, 22, 0.28);
+    background: #fff7ed;
+    color: #7c2d12;
+}
+
+.chat-message.mine.action {
+    background: #f97316;
+    color: #ffffff;
+}
+
+.shop-chat-button {
+    width: fit-content;
+    margin-top: 0.6rem;
+}
+
 .chat-message div {
     display: flex;
     align-items: center;
@@ -5785,8 +5835,10 @@ main.home-main .item-card .price {
 @media (max-width: 640px) {
     .chat-center-heading,
     .chat-product-strip,
-    .chat-compose-form {
+    .chat-compose-form,
+    .chat-deal-actions {
         align-items: stretch;
+        grid-template-columns: 1fr;
         flex-direction: column;
     }
 
