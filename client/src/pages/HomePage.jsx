@@ -312,11 +312,11 @@ function HomePage() {
 
       <section className="garuga-home-shell">
         <div className="garuga-simple-hero">
-          <p>Buy and sell items in Garuga quickly and safely.</p>
+          <p>One local marketplace for buyers, shops, sellers, and delivery partners.</p>
           <h2>
-            Find Great <span>Deals</span>
+            Buy. <span>Sell.</span>
             <br />
-            Around You
+            Deliver.
           </h2>
           <div className="garuga-hero-search">
             <input
