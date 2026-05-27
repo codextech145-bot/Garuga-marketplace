@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import ShopTrustBadge from '../components/ShopTrustBadge'
 import { useAuth } from '../contexts/AuthContext'
-import { getPublicShopByCodeOrId, listShopProducts } from '../services/supabaseMarketplace'
+import { getPublicShopByCodeOrId, listShopProducts, startMarketplaceConversation } from '../services/supabaseMarketplace'
 import { addCartItem, getCartCount, readCart, writeCart } from '../utils/cart'
 import { withTimeout } from '../utils/async'
 import { formatMoney, getSellerLanguage } from '../utils/marketplace'
@@ -14,7 +14,7 @@ function getDefaultDeliveryCategory(shop, product) {
 
 function ShopProductPage() {
   const { shopId, productId } = useParams()
-  const { user } = useAuth()
+  const { user, profile, role } = useAuth()
   const [shop, setShop] = useState(null)
   const [product, setProduct] = useState(null)
   const [related, setRelated] = useState([])
@@ -76,6 +76,42 @@ function ShopProductPage() {
     setMessage(`${product.name} added to cart.`)
   }
 
+  const handleChatSeller = async () => {
+    if (!shop || !product) return
+    if (!user) {
+      window.location.href = '/login'
+      return
+    }
+    if (shop.ownerId === user.id) {
+      setMessage('This is your own shop listing.')
+      return
+    }
+
+    try {
+      const conversation = await startMarketplaceConversation({
+        buyerId: user.id,
+        sellerId: shop.ownerId,
+        shopId: shop.id,
+        productId: product.id,
+        productSnapshot: {
+          name: product.name,
+          price: product.price,
+          photoURL: product.photoURL,
+          negotiable: product.negotiable,
+          shopName: shop.name,
+          url: `/shop/${shop.shopCode || shop.id}/product/${product.id}`,
+        },
+        openingMessage: `Hi, I am interested in ${product.name}. Is it still available${product.negotiable ? ' and can we negotiate?' : '?'}`,
+        senderName: profile?.name || user.email || 'Garuga buyer',
+        senderRole: role || 'buyer',
+      })
+      window.location.href = `/chats/${conversation.id}`
+    } catch (chatError) {
+      console.error(chatError)
+      setError(chatError.message || 'Could not start chat.')
+    }
+  }
+
   if (loading) return <p className="empty-message">Loading listing...</p>
 
   if (error || !shop || !product) {
@@ -125,6 +161,7 @@ function ShopProductPage() {
             <p className="market-eyebrow">{labels.buyerAction}</p>
             <h1 className="product-title">{product.name}</h1>
             <p className="product-price">{formatMoney(product.price)}</p>
+            {product.negotiable ? <p className="negotiable-pill">Negotiable / chat before ordering</p> : null}
             <p>{product.description || 'No description provided.'}</p>
             {shopClosed ? (
               <p className="admin-error">{shop.settings?.shopClosedMessage || 'This shop is closed for now.'}</p>
@@ -138,6 +175,9 @@ function ShopProductPage() {
             <div className="market-actions">
               <button className="btn-primary" type="button" onClick={handleAddToCart} disabled={shopClosed}>
                 Add to cart
+              </button>
+              <button className="btn-back" type="button" onClick={handleChatSeller} disabled={shop.ownerId === user?.id}>
+                Chat seller
               </button>
               <Link to={`/shop/${shop.shopCode || shop.id}`} className="btn-back">More from shop</Link>
             </div>

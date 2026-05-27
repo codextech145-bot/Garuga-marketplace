@@ -33,7 +33,8 @@ function AddItemPage() {
     description: '',
     location: '',
     phone: profile?.phone || '',
-    sellerName: profile?.name || ''
+    sellerName: profile?.name || '',
+    negotiable: false
   })
   const [photoFiles, setPhotoFiles] = useState([])
   const [uploading, setUploading] = useState(false)
@@ -41,7 +42,7 @@ function AddItemPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    setFormData((prev) => ({ ...prev, [name]: e.target.type === 'checkbox' ? e.target.checked : value }))
   }
 
   const handleFileChange = (e) => {
@@ -79,6 +80,7 @@ function AddItemPage() {
         phone: formData.phone.trim(),
         seller_name: formData.sellerName.trim(),
         photo_urls: photoURLs,
+        negotiable: Boolean(formData.negotiable),
         status: 'active',
       })
 
@@ -141,6 +143,13 @@ function AddItemPage() {
         <div className="form-group">
           <label htmlFor="phone">Phone Number *</label>
           <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange} required placeholder="e.g., 0771234567" />
+        </div>
+
+        <div className="form-group">
+          <label className="market-check">
+            <input type="checkbox" name="negotiable" checked={Boolean(formData.negotiable)} onChange={handleChange} />
+            Price is negotiable. Buyers can chat before buying.
+          </label>
         </div>
 
         <div className="form-group">

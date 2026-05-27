@@ -15,6 +15,7 @@ function mapProduct(row) {
     available: row.available,
     photoURL: row.photo_url || '',
     details: row.details || {},
+    negotiable: Boolean(row.negotiable),
     businessCategory: row.business_category || '',
     businessCategoryLabel: row.business_category_label || '',
     createdAt: row.created_at,
@@ -112,6 +113,7 @@ function mapItem(row) {
     sellerName: row.seller_name || '',
     photoURLs,
     photoURL: photoURLs[0] || '',
+    negotiable: Boolean(row.negotiable),
     status: row.status,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -126,6 +128,37 @@ function mapOrderMessage(row) {
     senderName: row.sender_name || '',
     senderRole: row.sender_role,
     message: row.message,
+    createdAt: row.created_at,
+  }
+}
+
+function mapMarketplaceConversation(row) {
+  return {
+    id: row.id,
+    buyerId: row.buyer_id,
+    sellerId: row.seller_id,
+    shopId: row.shop_id,
+    productId: row.product_id,
+    itemId: row.item_id,
+    status: row.status,
+    contextType: row.context_type,
+    productSnapshot: row.product_snapshot || {},
+    lastMessage: row.last_message || '',
+    lastMessageAt: row.last_message_at,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  }
+}
+
+function mapMarketplaceMessage(row) {
+  return {
+    id: row.id,
+    conversationId: row.conversation_id,
+    senderId: row.sender_id,
+    senderName: row.sender_name || '',
+    senderRole: row.sender_role,
+    message: row.message,
+    messageType: row.message_type || 'text',
     createdAt: row.created_at,
   }
 }
@@ -830,6 +863,187 @@ export function subscribeToOrderMessages(orderId, onChange, onError) {
     .subscribe()
 
   listOrderMessages(orderId).then(onChange).catch((error) => onError?.(error))
+
+  return () => {
+    client.removeChannel(channel)
+  }
+}
+
+export async function startMarketplaceConversation({
+  buyerId,
+  sellerId,
+  shopId = null,
+  productId = null,
+  itemId = null,
+  productSnapshot = {},
+  openingMessage = '',
+  senderName = '',
+  senderRole = 'buyer',
+}) {
+  const client = requireSupabase()
+
+  if (!buyerId || !sellerId) throw new Error('Both buyer and seller are required to start a chat.')
+  if (buyerId === sellerId) throw new Error('You cannot start a chat with yourself.')
+
+  const query = client
+    .from('marketplace_conversations')
+    .select('*')
+    .eq('buyer_id', buyerId)
+    .eq('seller_id', sellerId)
+
+  const scopedQuery = productId
+    ? query.eq('product_id', productId)
+    : itemId
+      ? query.eq('item_id', itemId)
+      : query.eq('shop_id', shopId)
+
+  const { data: existing, error: existingError } = await scopedQuery.maybeSingle()
+  if (existingError) throw existingError
+
+  let conversation = existing
+  if (!conversation) {
+    const { data, error } = await client
+      .from('marketplace_conversations')
+      .insert({
+        buyer_id: buyerId,
+        seller_id: sellerId,
+        shop_id: shopId,
+        product_id: productId,
+        item_id: itemId,
+        context_type: productId || itemId ? 'product' : 'shop',
+        product_snapshot: productSnapshot,
+        last_message: openingMessage.trim() || 'Chat started',
+        last_message_at: new Date().toISOString(),
+      })
+      .select('*')
+      .single()
+
+    if (error) throw error
+    conversation = data
+  }
+
+  if (openingMessage.trim()) {
+    await sendMarketplaceMessage({
+      conversationId: conversation.id,
+      senderId: buyerId,
+      senderName,
+      senderRole,
+      message: openingMessage,
+      messageType: 'text',
+    })
+  }
+
+  return mapMarketplaceConversation(conversation)
+}
+
+export async function listMarketplaceConversations(userId) {
+  const client = requireSupabase()
+  const { data, error } = await client
+    .from('marketplace_conversations')
+    .select('*')
+    .or(`buyer_id.eq.${userId},seller_id.eq.${userId}`)
+    .order('last_message_at', { ascending: false })
+
+  if (error) throw error
+  return (data || []).map(mapMarketplaceConversation)
+}
+
+export async function getMarketplaceConversation(conversationId) {
+  const client = requireSupabase()
+  const { data, error } = await client
+    .from('marketplace_conversations')
+    .select('*')
+    .eq('id', conversationId)
+    .single()
+
+  if (error) throw error
+  return mapMarketplaceConversation(data)
+}
+
+export async function listMarketplaceMessages(conversationId) {
+  const client = requireSupabase()
+  const { data, error } = await client
+    .from('marketplace_messages')
+    .select('*')
+    .eq('conversation_id', conversationId)
+    .order('created_at', { ascending: true })
+
+  if (error) throw error
+  return (data || []).map(mapMarketplaceMessage)
+}
+
+export async function sendMarketplaceMessage({
+  conversationId,
+  senderId,
+  senderName,
+  senderRole,
+  message,
+  messageType = 'text',
+}) {
+  const client = requireSupabase()
+  const cleanMessage = message.trim()
+  if (!cleanMessage) throw new Error('Message cannot be empty.')
+
+  const { data, error } = await client
+    .from('marketplace_messages')
+    .insert({
+      conversation_id: conversationId,
+      sender_id: senderId,
+      sender_name: senderName,
+      sender_role: senderRole,
+      message: cleanMessage,
+      message_type: messageType,
+    })
+    .select('*')
+    .single()
+
+  if (error) throw error
+
+  await client
+    .from('marketplace_conversations')
+    .update({
+      last_message: cleanMessage,
+      last_message_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', conversationId)
+
+  const mappedMessage = mapMarketplaceMessage(data)
+  const conversation = await getMarketplaceConversation(conversationId)
+  const recipientUserIds = [conversation.buyerId, conversation.sellerId].filter((id) => id && id !== senderId)
+
+  if (recipientUserIds.length) {
+    sendPushNotification({
+      recipientUserIds,
+      title: `New chat from ${senderName || 'Garuga'}`,
+      body: mappedMessage.message,
+      url: `/chats/${conversationId}`,
+      tag: `marketplace-chat-${conversationId}`,
+    })
+  }
+
+  return mappedMessage
+}
+
+export function subscribeToMarketplaceMessages(conversationId, onChange, onError) {
+  const client = requireSupabase()
+
+  const channel = client
+    .channel(`marketplace-messages:${conversationId}`)
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'marketplace_messages', filter: `conversation_id=eq.${conversationId}` },
+      async () => {
+        try {
+          onChange(await listMarketplaceMessages(conversationId))
+        } catch (error) {
+          onError?.(error)
+        }
+      }
+    )
+    .subscribe()
+
+  listMarketplaceMessages(conversationId).then(onChange).catch((error) => onError?.(error))
 
   return () => {
     client.removeChannel(channel)

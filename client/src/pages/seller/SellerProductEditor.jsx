@@ -13,6 +13,7 @@ const EMPTY_PRODUCT = {
   available: true,
   details: {},
   photoURL: '',
+  negotiable: false,
 }
 
 function SellerProductEditor() {
@@ -53,6 +54,7 @@ function SellerProductEditor() {
             available: product.available !== false,
             details: product.details || {},
             photoURL: product.photoURL || '',
+            negotiable: Boolean(product.negotiable),
           })
         } else {
           setFormData(EMPTY_PRODUCT)
@@ -111,6 +113,7 @@ function SellerProductEditor() {
         description: formData.description.trim(),
         available: Boolean(formData.available),
         photo_url: photoURL,
+        negotiable: Boolean(formData.negotiable),
         details: formData.details || {},
         business_category: shop.businessCategory,
         business_category_label: shop.businessCategoryLabel,
@@ -148,6 +151,11 @@ function SellerProductEditor() {
             <label>Name<input name="name" value={formData.name} onChange={handleChange} required /></label>
             <label>Price (UGX)<input type="number" min="0" name="price" value={formData.price} onChange={handleChange} required /></label>
             <label>Description<textarea name="description" value={formData.description} onChange={handleChange} rows="3" /></label>
+
+            <label className="market-check">
+              <input type="checkbox" name="negotiable" checked={Boolean(formData.negotiable)} onChange={handleChange} />
+              Price is negotiable. Buyers can chat before ordering.
+            </label>
 
             {categoryConfig.productFields.map((field) => (
               <label key={field.name} className={field.type === 'checkbox' ? 'market-check' : ''}>

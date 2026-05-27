@@ -437,6 +437,116 @@ create index if not exists orders_shop_id_idx on public.orders(shop_id);
 create index if not exists reports_reporter_id_idx on public.reports(reporter_id);
 create index if not exists site_content_updated_by_idx on public.site_content(updated_by);
 
+alter table public.products
+  add column if not exists negotiable boolean not null default false;
+
+alter table public.items
+  add column if not exists negotiable boolean not null default false;
+
+create table if not exists public.marketplace_conversations (
+  id uuid primary key default gen_random_uuid(),
+  buyer_id uuid not null references public.profiles(id) on delete cascade,
+  seller_id uuid not null references public.profiles(id) on delete cascade,
+  shop_id uuid references public.shops(id) on delete set null,
+  product_id uuid references public.products(id) on delete set null,
+  item_id uuid references public.items(id) on delete set null,
+  status text not null default 'open' check (status in ('open', 'booked', 'closed', 'reported')),
+  context_type text not null default 'product' check (context_type in ('product', 'shop', 'general')),
+  product_snapshot jsonb not null default '{}',
+  last_message text not null default '',
+  last_message_at timestamptz not null default now(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  constraint marketplace_conversations_has_context check (product_id is not null or item_id is not null or shop_id is not null),
+  constraint marketplace_conversations_not_self check (buyer_id <> seller_id)
+);
+
+create unique index if not exists marketplace_conversations_product_unique_idx
+  on public.marketplace_conversations(buyer_id, seller_id, product_id)
+  where product_id is not null;
+
+create unique index if not exists marketplace_conversations_item_unique_idx
+  on public.marketplace_conversations(buyer_id, seller_id, item_id)
+  where item_id is not null;
+
+create index if not exists marketplace_conversations_buyer_idx on public.marketplace_conversations(buyer_id, last_message_at desc);
+create index if not exists marketplace_conversations_seller_idx on public.marketplace_conversations(seller_id, last_message_at desc);
+
+create table if not exists public.marketplace_messages (
+  id uuid primary key default gen_random_uuid(),
+  conversation_id uuid not null references public.marketplace_conversations(id) on delete cascade,
+  sender_id uuid not null references public.profiles(id) on delete cascade,
+  sender_name text not null default '',
+  sender_role text not null check (sender_role in ('buyer', 'seller', 'delivery')),
+  message text not null,
+  message_type text not null default 'text' check (message_type in ('text', 'system', 'offer', 'booking')),
+  created_at timestamptz not null default now()
+);
+
+create index if not exists marketplace_messages_conversation_created_idx on public.marketplace_messages(conversation_id, created_at asc);
+create index if not exists marketplace_messages_sender_idx on public.marketplace_messages(sender_id);
+
+alter table public.marketplace_conversations enable row level security;
+alter table public.marketplace_messages enable row level security;
+
+drop policy if exists "marketplace conversations participant read" on public.marketplace_conversations;
+create policy "marketplace conversations participant read" on public.marketplace_conversations
+  for select using (auth.uid() = buyer_id or auth.uid() = seller_id);
+
+drop policy if exists "marketplace conversations buyer insert" on public.marketplace_conversations;
+create policy "marketplace conversations buyer insert" on public.marketplace_conversations
+  for insert with check (auth.uid() = buyer_id);
+
+drop policy if exists "marketplace conversations participant update" on public.marketplace_conversations;
+create policy "marketplace conversations participant update" on public.marketplace_conversations
+  for update using (auth.uid() = buyer_id or auth.uid() = seller_id)
+  with check (auth.uid() = buyer_id or auth.uid() = seller_id);
+
+drop policy if exists "marketplace messages participant read" on public.marketplace_messages;
+create policy "marketplace messages participant read" on public.marketplace_messages
+  for select using (
+    exists (
+      select 1 from public.marketplace_conversations
+      where marketplace_conversations.id = marketplace_messages.conversation_id
+      and (auth.uid() = marketplace_conversations.buyer_id or auth.uid() = marketplace_conversations.seller_id)
+    )
+  );
+
+drop policy if exists "marketplace messages participant insert" on public.marketplace_messages;
+create policy "marketplace messages participant insert" on public.marketplace_messages
+  for insert with check (
+    auth.uid() = sender_id
+    and exists (
+      select 1 from public.marketplace_conversations
+      where marketplace_conversations.id = marketplace_messages.conversation_id
+      and (auth.uid() = marketplace_conversations.buyer_id or auth.uid() = marketplace_conversations.seller_id)
+    )
+  );
+
+grant select, insert, update on public.marketplace_conversations to authenticated;
+grant select, insert on public.marketplace_messages to authenticated;
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_publication_tables
+    where pubname = 'supabase_realtime'
+    and schemaname = 'public'
+    and tablename = 'marketplace_conversations'
+  ) then
+    alter publication supabase_realtime add table public.marketplace_conversations;
+  end if;
+
+  if not exists (
+    select 1 from pg_publication_tables
+    where pubname = 'supabase_realtime'
+    and schemaname = 'public'
+    and tablename = 'marketplace_messages'
+  ) then
+    alter publication supabase_realtime add table public.marketplace_messages;
+  end if;
+end $$;
+
 do $$
 begin
   if not exists (select 1 from pg_constraint where conname = 'profiles_trust_score_check') then

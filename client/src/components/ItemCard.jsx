@@ -35,6 +35,7 @@ function ItemCard({ item }) {
         {item.location ? <span>{item.location}</span> : null}
       </div>
       <p className="price">UGX {Number(item.price).toLocaleString()}</p>
+      {item.negotiable ? <span className="item-negotiable">Negotiable</span> : null}
     </div>
   )
 }

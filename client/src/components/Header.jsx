@@ -41,6 +41,7 @@ function Header({ theme = 'light', onToggleTheme, compactHome = false }) {
     { to: '/', label: 'Explore' },
     { to: '/about', label: 'About' },
     { to: '/cart', label: 'Cart' },
+    { to: '/chats', label: 'Chats', protected: true },
     { to: getDashboardLink(), label: 'Dashboard', protected: true },
     { to: '/dashboard/seller', label: 'Seller dashboard', sellerDelivery: true },
     { to: '/dashboard/delivery', label: 'Delivery dashboard', sellerDelivery: true },

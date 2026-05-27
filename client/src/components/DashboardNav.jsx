@@ -6,6 +6,7 @@ const NAV_LINKS = {
   seller: [
     { to: '/dashboard/seller', label: 'Dashboard' },
     { to: '/dashboard/seller/orders', label: 'Orders' },
+    { to: '/chats', label: 'Chats' },
     { to: '/dashboard/seller/inventory', label: 'My products' },
     { to: '/dashboard/seller/settings', label: 'Shop settings' },
   ],
@@ -13,10 +14,12 @@ const NAV_LINKS = {
     { to: '/dashboard/buyer', label: 'Dashboard' },
     { to: '/dashboard/buyer/cart', label: 'Cart' },
     { to: '/dashboard/buyer/shops', label: 'Shops' },
+    { to: '/chats', label: 'Chats' },
     { to: '/dashboard/buyer/orders', label: 'Orders' },
   ],
   delivery: [
     { to: '/dashboard/delivery', label: 'Dashboard' },
+    { to: '/chats', label: 'Chats' },
     { to: '/dashboard/delivery/available', label: 'Available' },
     { to: '/dashboard/delivery/active', label: 'Active' },
   ],

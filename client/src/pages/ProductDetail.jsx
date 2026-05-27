@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import ItemCard from '../components/ItemCard'
-import { getItem, listRelatedItems } from '../services/supabaseMarketplace'
+import { useAuth } from '../contexts/AuthContext'
+import { getItem, listRelatedItems, startMarketplaceConversation } from '../services/supabaseMarketplace'
 import { withTimeout } from '../utils/async'
 
 function normalizeUgandaPhone(phone) {
@@ -29,6 +30,7 @@ function buildWhatsAppLink({ phone, productName, price, url }) {
 function ProductDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { user, profile, role } = useAuth()
   const [item, setItem] = useState(null)
   const [relatedItems, setRelatedItems] = useState([])
   const [loading, setLoading] = useState(true)
@@ -101,6 +103,44 @@ function ProductDetail() {
     })
     if (!link) return
     window.open(link, '_blank', 'noopener,noreferrer')
+  }
+
+  const handleChatSeller = async () => {
+    if (!item) return
+    if (!user) {
+      navigate('/login')
+      return
+    }
+    if (!item.sellerId) {
+      alert('This seller is not connected to in-app chat yet.')
+      return
+    }
+    if (item.sellerId === user.id) {
+      alert('This is your own listing.')
+      return
+    }
+
+    try {
+      const conversation = await startMarketplaceConversation({
+        buyerId: user.id,
+        sellerId: item.sellerId,
+        itemId: item.id,
+        productSnapshot: {
+          name: item.productName,
+          price: item.price,
+          photoURL: item.photoURL,
+          negotiable: item.negotiable,
+          url: `/product/${item.id}`,
+        },
+        openingMessage: `Hi, I am interested in ${item.productName}. Is it still available${item.negotiable ? ' and can we negotiate?' : '?'}`,
+        senderName: profile?.name || user.email || 'Garuga buyer',
+        senderRole: role || 'buyer',
+      })
+      navigate(`/chats/${conversation.id}`)
+    } catch (error) {
+      console.error(error)
+      alert(error.message || 'Could not start chat.')
+    }
   }
 
   const photos =
@@ -257,6 +297,7 @@ function ProductDetail() {
 
             <h1 className="product-title">{item.productName}</h1>
             <p className="product-price">UGX {Number(item.price).toLocaleString()}</p>
+            {item.negotiable ? <p className="negotiable-pill">Negotiable / chat before buying</p> : null}
 
             <div className="product-contact-lines">
               <div className="product-contact-line">
@@ -295,6 +336,9 @@ function ProductDetail() {
                 💬 Chat on WhatsApp
               </a>
             ) : null}
+            <button className="btn-primary" type="button" onClick={handleChatSeller} disabled={!item.sellerId || item.sellerId === user?.id}>
+              Chat seller in Garuga
+            </button>
           </div>
 
           <div className="seller-card">
@@ -336,6 +380,10 @@ function ProductDetail() {
         <button className="btn-action btn-whatsapp-action" onClick={handleWhatsApp} disabled={!whatsappLink}>
           <span>💬</span>
           <span>WhatsApp</span>
+        </button>
+        <button className="btn-action" onClick={handleChatSeller} disabled={!item.sellerId || item.sellerId === user?.id}>
+          <span>💼</span>
+          <span>Garuga chat</span>
         </button>
       </div>
     </div>

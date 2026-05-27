@@ -26,6 +26,8 @@ import DeliveryActive from './pages/delivery/DeliveryActive'
 import ShopPage from './pages/ShopPage'
 import ShopProductPage from './pages/ShopProductPage'
 import OrderTrackingPage from './pages/OrderTrackingPage'
+import ChatsPage from './pages/ChatsPage'
+import ChatRoomPage from './pages/ChatRoomPage'
 
 const AdminPage = lazy(() => import('./pages/AdminPage'))
 
@@ -78,6 +80,8 @@ function App() {
           <Route path="/signup" element={<AuthPage mode="signup" />} />
           <Route path="/login" element={<AuthPage mode="login" />} />
           <Route path="/dashboard" element={<DashboardRedirect />} />
+          <Route path="/chats" element={<ProtectedRoute><ChatsPage /></ProtectedRoute>} />
+          <Route path="/chats/:conversationId" element={<ProtectedRoute><ChatRoomPage /></ProtectedRoute>} />
           
           {/* Seller Dashboard & Sub-pages */}
           <Route path="/dashboard/seller" element={<ProtectedRoute role="seller"><SellerDashboard /></ProtectedRoute>} />
