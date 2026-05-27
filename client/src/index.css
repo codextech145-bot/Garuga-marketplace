@@ -5858,3 +5858,257 @@ main.home-main .item-card .price {
     }
 }
 
+/* Chat UI polish */
+.chats-page,
+.chat-room-page {
+    width: min(1120px, calc(100% - 1.5rem));
+    padding-bottom: 1.5rem;
+}
+
+.chats-page .dashboard-header,
+.chat-room-page .dashboard-header {
+    margin-bottom: 1rem;
+}
+
+.chat-center-panel,
+.chat-room-panel {
+    border-radius: 24px;
+    overflow: hidden;
+}
+
+.chat-center-heading {
+    align-items: flex-start;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--line);
+}
+
+.chat-center-heading h3 {
+    margin-bottom: 0.25rem;
+}
+
+.chat-center-heading .market-actions {
+    justify-content: flex-end;
+    margin: 0;
+}
+
+.chat-thread-list {
+    gap: 0.9rem;
+}
+
+.chat-thread-card {
+    grid-template-columns: 64px minmax(0, 1fr);
+    padding: 0.95rem;
+    border-radius: 20px;
+}
+
+.chat-thread-card img,
+.chat-thread-card .chat-thread-photo {
+    width: 64px;
+    height: 64px;
+}
+
+.chat-thread-title-row {
+    align-items: flex-start;
+}
+
+.chat-thread-title-row strong {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chat-room-panel {
+    gap: 0;
+    padding: 0;
+}
+
+.chat-room-panel > .empty-message,
+.chat-room-panel > .admin-error {
+    margin: 1rem;
+}
+
+.chat-product-strip {
+    border-width: 0 0 1px;
+    border-radius: 0;
+    padding: 1rem;
+    background:
+        radial-gradient(circle at right, rgba(249, 115, 22, 0.12), transparent 16rem),
+        var(--surface-muted);
+}
+
+.chat-product-strip .btn-back {
+    white-space: nowrap;
+}
+
+.chat-deal-actions {
+    grid-template-columns: minmax(180px, 1fr);
+    border-width: 0 0 1px;
+    border-radius: 0;
+    padding: 0.9rem 1rem;
+    background: #fff7ed;
+}
+
+.chat-deal-actions label {
+    margin: 0;
+}
+
+.chat-deal-actions .btn-back,
+.chat-deal-actions .btn-primary {
+    min-height: 42px;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+@media (min-width: 900px) {
+    .chat-deal-actions {
+        grid-template-columns: minmax(220px, 1.4fr) minmax(170px, 220px) repeat(3, auto);
+    }
+}
+
+.chat-message-list {
+    min-height: min(520px, 58vh);
+    max-height: min(620px, 62vh);
+    margin: 0;
+    padding: 1rem;
+    border-radius: 0;
+    background:
+        linear-gradient(rgba(255, 250, 244, 0.74), rgba(255, 250, 244, 0.74)),
+        radial-gradient(circle at top left, rgba(249, 115, 22, 0.10), transparent 18rem);
+}
+
+.chat-message {
+    width: fit-content;
+    max-width: min(76%, 620px);
+    padding: 0.8rem 0.95rem;
+    word-break: break-word;
+}
+
+.chat-message.mine {
+    margin-left: auto;
+}
+
+.chat-message div {
+    min-width: 0;
+}
+
+.chat-message strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chat-compose-form {
+    position: sticky;
+    bottom: 0;
+    align-items: stretch;
+    padding: 0.9rem 1rem;
+    border-top: 1px solid var(--line);
+    background: rgba(255, 250, 244, 0.96);
+    backdrop-filter: blur(14px);
+}
+
+.chat-compose-form input {
+    min-height: 46px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0 1rem;
+    background: #ffffff;
+    color: var(--text-main);
+}
+
+.chat-compose-form button {
+    min-width: 92px;
+    border-radius: 999px;
+}
+
+@media (max-width: 760px) {
+    .chats-page,
+    .chat-room-page {
+        width: min(100% - 0.75rem, 1120px);
+    }
+
+    .chats-page .dashboard-title-row,
+    .chat-room-page .dashboard-title-row {
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: 0.6rem;
+    }
+
+    .chats-page .dashboard-title-row h2,
+    .chat-room-page .dashboard-title-row h2 {
+        font-size: 1.25rem;
+    }
+
+    .chats-page .dashboard-title-row p,
+    .chat-room-page .dashboard-title-row p {
+        display: none;
+    }
+
+    .chat-center-heading,
+    .chat-center-heading .market-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        align-items: stretch;
+    }
+
+    .chat-thread-card {
+        grid-template-columns: 52px minmax(0, 1fr);
+        border-radius: 16px;
+        padding: 0.8rem;
+    }
+
+    .chat-thread-card img,
+    .chat-thread-card .chat-thread-photo {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+    }
+
+    .chat-thread-title-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.1rem;
+    }
+
+    .chat-product-strip {
+        display: grid;
+        grid-template-columns: 54px minmax(0, 1fr);
+    }
+
+    .chat-product-strip .btn-back {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+
+    .chat-deal-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .chat-message-list {
+        min-height: 54vh;
+        max-height: 58vh;
+        padding: 0.85rem;
+    }
+
+    .chat-message {
+        max-width: 88%;
+    }
+
+    .chat-compose-form {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 0.55rem;
+        padding: 0.75rem;
+    }
+
+    .chat-compose-form input {
+        min-width: 0;
+    }
+
+    .chat-compose-form button {
+        min-width: 74px;
+        padding-inline: 0.85rem;
+    }
+}
+
