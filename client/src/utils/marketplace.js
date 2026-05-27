@@ -1,3 +1,5 @@
+import { supabase } from '../config/supabase'
+
 const IMGBB_API_KEY = import.meta.env.VITE_IMGBB_API_KEY || ''
 
 export const ROLES = ['buyer', 'seller', 'delivery']
@@ -364,6 +366,30 @@ export function getTodayStart() {
 
 export async function uploadToImgBB(file) {
   if (!file) return ''
+
+  try {
+    const session = supabase ? await supabase.auth.getSession() : null
+    const token = session?.data?.session?.access_token
+    const formData = new FormData()
+    formData.append('image', file)
+
+    const response = await fetch('/api/upload-image', {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: formData,
+    })
+
+    if (response.ok) {
+      const data = await response.json()
+      if (data.url) return data.url
+    }
+  } catch (error) {
+    console.warn('Cloudflare image upload unavailable, trying fallback.', error)
+  }
+
+  if (!IMGBB_API_KEY) {
+    throw new Error('Image upload is not configured.')
+  }
 
   const formData = new FormData()
   formData.append('image', file)
