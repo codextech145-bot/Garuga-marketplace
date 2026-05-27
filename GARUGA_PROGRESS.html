@@ -3,595 +3,237 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Garuga Marketplace - Current Progress</title>
+  <title>Garuga Marketplace - Phase One Progress</title>
   <style>
     :root {
-      --ink: #172033;
-      --muted: #667085;
-      --line: #e5e7eb;
-      --surface: #ffffff;
-      --soft: #f8fafc;
+      --black: #080604;
+      --ink: #19120d;
+      --muted: #6b625a;
+      --line: #eadfd2;
+      --paper: #fffaf4;
+      --card: #ffffff;
       --orange: #f97316;
+      --orange-dark: #c2410c;
       --green: #16a34a;
-      --red: #dc2626;
       --blue: #2563eb;
-      --shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+      --red: #dc2626;
+      --amber: #d97706;
+      --shadow: 0 18px 48px rgba(42, 24, 8, 0.12);
     }
 
     * { box-sizing: border-box; }
-
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--ink);
-      background: #f3f4f6;
+      background:
+        radial-gradient(circle at top right, rgba(249, 115, 22, 0.16), transparent 34rem),
+        linear-gradient(180deg, #fff7ed 0%, #f8f4ee 44%, #fffaf4 100%);
       line-height: 1.55;
     }
 
     header {
-      background: linear-gradient(135deg, #172033 0%, #7c2d12 58%, #f97316 100%);
       color: white;
-      padding: 36px 20px;
+      background:
+        radial-gradient(circle at 80% 20%, rgba(249, 115, 22, 0.54), transparent 22rem),
+        linear-gradient(135deg, #080604 0%, #271108 58%, #f97316 132%);
+      padding: 42px 20px 34px;
+      overflow: hidden;
     }
 
-    .wrap {
-      width: min(1120px, 100%);
-      margin: 0 auto;
-    }
+    .wrap { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+    .hero { display: grid; gap: 18px; }
+    .eyebrow { color: #fed7aa; font-size: 12px; font-weight: 950; letter-spacing: 0.16em; text-transform: uppercase; }
+    h1 { margin: 0; max-width: 920px; font-size: clamp(34px, 6vw, 72px); line-height: 0.94; letter-spacing: -0.06em; }
+    .hero p { margin: 0; max-width: 760px; color: rgba(255,255,255,0.82); font-size: 1.05rem; }
 
-    .hero {
-      display: grid;
-      gap: 16px;
-    }
+    .scoreboard { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 16px; margin-top: 12px; }
+    .score-card, .mini-card, .card, .table { background: var(--card); border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow); }
+    .score-card { padding: 22px; color: var(--ink); }
+    .score-card strong { display: block; font-size: clamp(44px, 7vw, 86px); line-height: 1; letter-spacing: -0.07em; color: var(--orange); }
+    .score-card span { color: var(--muted); font-weight: 800; }
+    .progress { height: 14px; border-radius: 999px; background: #eadfd2; overflow: hidden; margin: 18px 0 8px; }
+    .bar { height: 100%; width: var(--w); background: linear-gradient(90deg, var(--green), var(--orange)); }
+    .mini-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .mini-card { padding: 16px; color: var(--ink); }
+    .mini-card b { display: block; font-size: 1.6rem; color: var(--orange-dark); }
+    .mini-card span { color: var(--muted); font-weight: 750; }
 
-    .eyebrow {
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      font-size: 12px;
-      font-weight: 800;
-      color: #fed7aa;
-    }
+    nav { position: sticky; top: 0; z-index: 5; border-bottom: 1px solid var(--line); background: rgba(255,250,244,0.92); backdrop-filter: blur(16px); }
+    .tabs { display: flex; gap: 8px; overflow-x: auto; padding: 12px 0; }
+    .tab { border: 1px solid var(--line); border-radius: 999px; background: white; color: var(--ink); padding: 9px 14px; font: inherit; font-weight: 900; white-space: nowrap; cursor: pointer; }
+    .tab.active { background: var(--orange); border-color: var(--orange); color: white; }
 
-    h1 {
-      font-size: clamp(34px, 6vw, 68px);
-      line-height: 0.95;
-      margin: 0;
-      max-width: 880px;
-    }
+    main { padding: 28px 0 54px; }
+    section.panel { display: none; animation: appear .18s ease-out; }
+    section.panel.active { display: block; }
+    @keyframes appear { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-    .hero p {
-      max-width: 720px;
-      margin: 0;
-      color: rgba(255, 255, 255, 0.84);
-    }
-
-    .topline {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      border: 1px solid rgba(255, 255, 255, 0.24);
-      border-radius: 999px;
-      padding: 7px 11px;
-      color: rgba(255, 255, 255, 0.92);
-      font-size: 13px;
-      font-weight: 700;
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 3;
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .tabs {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding: 12px 20px;
-    }
-
-    .tab {
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: white;
-      color: var(--ink);
-      padding: 8px 13px;
-      font: inherit;
-      font-weight: 800;
-      white-space: nowrap;
-      cursor: pointer;
-    }
-
-    .tab.active {
-      background: var(--orange);
-      border-color: var(--orange);
-      color: white;
-    }
-
-    main {
-      padding: 22px 20px 48px;
-    }
-
-    section.panel {
-      display: none;
-      animation: appear 0.18s ease-out;
-    }
-
-    section.panel.active {
-      display: block;
-    }
-
-    @keyframes appear {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 14px;
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      box-shadow: var(--shadow);
-      padding: 18px;
-    }
-
-    .card h3 {
-      margin: 0 0 8px;
-      font-size: 18px;
-    }
-
-    .card p {
-      margin: 0;
-      color: var(--muted);
-    }
-
-    .status {
-      display: inline-flex;
-      align-items: center;
-      border-radius: 999px;
-      padding: 4px 9px;
-      font-size: 12px;
-      font-weight: 900;
-      margin-bottom: 10px;
-    }
-
+    .section-head { display: grid; gap: 6px; margin: 0 0 18px; }
+    .section-head h2 { margin: 0; font-size: clamp(26px, 4vw, 42px); letter-spacing: -0.04em; }
+    .section-head p { margin: 0; color: var(--muted); max-width: 820px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(245px, 1fr)); gap: 14px; }
+    .card { padding: 18px; }
+    .card h3 { margin: 0 0 8px; font-size: 18px; }
+    .card p { margin: 0; color: var(--muted); }
+    .status { display: inline-flex; border-radius: 999px; padding: 5px 10px; margin-bottom: 11px; font-size: 12px; font-weight: 950; }
     .done { background: #dcfce7; color: #166534; }
     .partial { background: #fff7ed; color: #9a3412; }
-    .todo { background: #fee2e2; color: #991b1b; }
     .next { background: #dbeafe; color: #1e40af; }
+    .todo { background: #fee2e2; color: #991b1b; }
 
-    .section-head {
-      margin: 0 0 16px;
-      display: grid;
-      gap: 6px;
-    }
+    .list { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 8px; }
+    .list li { display: grid; grid-template-columns: 24px 1fr; gap: 8px; color: var(--muted); font-size: 14px; }
+    .mark { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; font-size: 12px; font-weight: 950; }
+    .ok { background: #dcfce7; color: var(--green); }
+    .mid { background: #fff7ed; color: var(--amber); }
+    .no { background: #fee2e2; color: var(--red); }
 
-    .section-head h2 {
-      margin: 0;
-      font-size: clamp(24px, 4vw, 36px);
-    }
+    .table { overflow-x: auto; }
+    table { width: 100%; min-width: 760px; border-collapse: collapse; }
+    th, td { padding: 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: #fff7ed; color: var(--ink); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+    td { color: var(--muted); }
+    code { background: #111827; color: #f9fafb; border-radius: 6px; padding: 2px 6px; font-size: 12px; }
+    .callout { margin-bottom: 16px; padding: 16px; border-radius: 18px; border: 1px solid #fed7aa; border-left: 6px solid var(--orange); background: #fff7ed; color: #7c2d12; font-weight: 750; }
+    footer { padding: 28px 20px 42px; color: var(--muted); text-align: center; }
 
-    .section-head p {
-      margin: 0;
-      color: var(--muted);
-      max-width: 760px;
-    }
-
-    .list {
-      margin: 12px 0 0;
-      padding: 0;
-      list-style: none;
-      display: grid;
-      gap: 8px;
-    }
-
-    .list li {
-      display: grid;
-      grid-template-columns: 22px 1fr;
-      gap: 8px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .mark {
-      width: 22px;
-      height: 22px;
-      display: grid;
-      place-items: center;
-      border-radius: 50%;
-      font-weight: 900;
-      font-size: 12px;
-    }
-
-    .mark.ok { background: #dcfce7; color: var(--green); }
-    .mark.no { background: #fee2e2; color: var(--red); }
-    .mark.mid { background: #fff7ed; color: var(--orange); }
-
-    .table {
-      overflow-x: auto;
-      background: white;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      box-shadow: var(--shadow);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 720px;
-    }
-
-    th, td {
-      text-align: left;
-      padding: 13px 14px;
-      border-bottom: 1px solid var(--line);
-      vertical-align: top;
-    }
-
-    th {
-      background: var(--soft);
-      color: var(--ink);
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    td {
-      color: var(--muted);
-    }
-
-    code {
-      background: #111827;
-      color: #f9fafb;
-      padding: 2px 6px;
-      border-radius: 6px;
-      font-size: 12px;
-    }
-
-    .progress {
-      height: 12px;
-      border-radius: 999px;
-      overflow: hidden;
-      background: #e5e7eb;
-      margin-top: 8px;
-    }
-
-    .bar {
-      height: 100%;
-      width: var(--w);
-      background: linear-gradient(90deg, var(--green), var(--orange));
-    }
-
-    .callout {
-      border: 1px solid #fed7aa;
-      border-left: 5px solid var(--orange);
-      border-radius: 12px;
-      padding: 16px;
-      background: #fff7ed;
-      color: #7c2d12;
-      margin-bottom: 16px;
-    }
-
-    footer {
-      padding: 24px 20px 40px;
-      color: var(--muted);
-      text-align: center;
-    }
-
-    @media (max-width: 640px) {
-      header { padding: 28px 16px; }
-      main { padding-inline: 14px; }
-      .card { padding: 15px; }
+    @media (max-width: 760px) {
+      .wrap { width: min(100% - 24px, 1180px); }
+      .scoreboard { grid-template-columns: 1fr; }
+      .mini-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
 <body>
   <header>
     <div class="wrap hero">
-      <div class="eyebrow">Garuga Marketplace Status</div>
-      <h1>Current build progress, limits, and launch checklist.</h1>
-      <p>This file summarizes the live React/Supabase/Cloudflare direction against the original city OS vision in <code>garuga.html</code>.</p>
-      <div class="topline">
-        <span class="pill">Frontend: React + Vite</span>
-        <span class="pill">Backend: Supabase</span>
-        <span class="pill">Hosting: Cloudflare Pages</span>
-        <span class="pill">Domain: garuga.online</span>
+      <div class="eyebrow">Garuga Marketplace Phase One</div>
+      <h1>Current build progress and the road to a complete local deal system.</h1>
+      <p>Updated after the Cloudflare move, R2 image storage, Supabase migration, professional chat center, shop chat, negotiation actions, cart, booking, delivery, and admin control work.</p>
+      <div class="scoreboard">
+        <div class="score-card">
+          <strong>78%</strong>
+          <span>Phase One MVP progress</span>
+          <div class="progress"><div class="bar" style="--w: 78%"></div></div>
+          <p>Garuga can already work as a real local marketplace MVP. The remaining 22% is mainly payments/escrow, deeper anti-fraud automation, analytics, QR sharing polish, and final production hardening.</p>
+        </div>
+        <div class="mini-grid">
+          <div class="mini-card"><b>Live</b><span>Cloudflare Pages + garuga.online</span></div>
+          <div class="mini-card"><b>Live</b><span>Supabase backend + realtime</span></div>
+          <div class="mini-card"><b>Live</b><span>R2 image upload path</span></div>
+          <div class="mini-card"><b>Live</b><span>Chat + deal actions</span></div>
+        </div>
       </div>
     </div>
   </header>
 
   <nav>
     <div class="wrap tabs">
-      <button class="tab active" data-tab="features">Latest Features</button>
-      <button class="tab" data-tab="can">Can / Cannot</button>
+      <button class="tab active" data-tab="summary">Summary</button>
+      <button class="tab" data-tab="features">Current Features</button>
+      <button class="tab" data-tab="percentages">Progress %</button>
       <button class="tab" data-tab="remaining">Remaining</button>
-      <button class="tab" data-tab="reference">garuga.html Reference</button>
-      <button class="tab" data-tab="launch">Before Publish</button>
+      <button class="tab" data-tab="launch">Launch Checklist</button>
     </div>
   </nav>
 
   <main class="wrap">
-    <section id="features" class="panel active">
+    <section id="summary" class="panel active">
       <div class="section-head">
-        <h2>Latest features already in the app</h2>
-        <p>These are the newest practical pieces now in the real app, not only in the vision file.</p>
+        <h2>Where the platform is now</h2>
+        <p>The product has moved from a simple listing site toward a local commerce operating system: shops, buyers, delivery, chat, bookings, product negotiation, and admin control.</p>
       </div>
       <div class="grid">
-        <article class="card">
-          <span class="status done">DONE</span>
-          <h3>Supabase backend direction</h3>
-          <p>Auth, profiles, shops, products, orders, realtime subscriptions, admin functions, and push subscriptions are now centered on Supabase.</p>
-        </article>
-        <article class="card">
-          <span class="status done">DONE</span>
-          <h3>Buyer cart with quantities</h3>
-          <p>Buyers can select item quantity on shop cards and add products to a catalogue cart.</p>
-        </article>
-        <article class="card">
-          <span class="status done">DONE</span>
-          <h3>Multi-shop order splitting</h3>
-          <p>If a buyer adds products from different shops, checkout creates separate seller orders so each seller receives only their own message.</p>
-        </article>
-        <article class="card">
-          <span class="status done">DONE</span>
-          <h3>Seller shop editing</h3>
-          <p>Sellers can edit shop name, phone, email, location, category tools, products, availability, and photos.</p>
-        </article>
-        <article class="card">
-          <span class="status done">DONE</span>
-          <h3>Category shop IDs</h3>
-          <p>Shop codes are category based: restaurants use <code>GR-01</code>, electronics use <code>GE-01</code>, and retail uses <code>GRT-01</code>.</p>
-        </article>
-        <article class="card">
-          <span class="status done">DONE</span>
-          <h3>Admin key access</h3>
-          <p>The admin panel uses a 15-digit key verified by Supabase Edge Functions, not a normal user account.</p>
-        </article>
-        <article class="card">
-          <span class="status done">DONE</span>
-          <h3>Push notification plumbing</h3>
-          <p>VAPID subscriptions, service worker push handling, Supabase table, and <code>send-push</code> function are in place.</p>
-        </article>
-        <article class="card">
-          <span class="status done">DONE</span>
-          <h3>Softcopy receipt</h3>
-          <p>Delivered orders show a professional receipt with logo, marketplace name, shop, shop code, buyer, items, quantities, and total.</p>
-        </article>
-        <article class="card">
-          <span class="status done">DONE</span>
-          <h3>Cloudflare deployment</h3>
-          <p>The app now has Cloudflare Pages deploy docs, SPA redirects, and admin publish commands pointed to Cloudflare.</p>
-        </article>
+        <article class="card"><span class="status done">DONE</span><h3>Cloudflare foundation</h3><p>Hosting is on Cloudflare Pages, env variables are working, domain is live, and R2 bucket binding supports the image upload backend.</p></article>
+        <article class="card"><span class="status done">DONE</span><h3>Supabase backend</h3><p>Auth, profiles, shops, products, items, orders, reports, push subscriptions, realtime messages, and chat tables are in Supabase with RLS.</p></article>
+        <article class="card"><span class="status done">DONE</span><h3>Marketplace chat center</h3><p>Users have a Chats section. Buyers can chat with sellers about products or talk to a shop generally before buying anything.</p></article>
+        <article class="card"><span class="status partial">PARTIAL</span><h3>Transaction engine</h3><p>Orders, cart checkout, pickup/delivery choice, delivery fee chat, delivery code, and receipts exist. Real payment/escrow is future work.</p></article>
       </div>
     </section>
 
-    <section id="can" class="panel">
+    <section id="features" class="panel">
       <div class="section-head">
-        <h2>What we can do now, and what we cannot do yet</h2>
-        <p>This is the honest operational boundary before launch.</p>
+        <h2>Current features already built</h2>
+        <p>These are the live or code-complete parts of Phase One.</p>
       </div>
       <div class="grid">
-        <article class="card">
-          <span class="status done">CAN DO</span>
-          <h3>Launch a useful local marketplace</h3>
-          <ul class="list">
-            <li><span class="mark ok">Y</span><span>Buyers can browse shops and products.</span></li>
-            <li><span class="mark ok">Y</span><span>Sellers can create category-based shops and manage products.</span></li>
-            <li><span class="mark ok">Y</span><span>Delivery users can see accepted delivery orders and update status.</span></li>
-            <li><span class="mark ok">Y</span><span>Admin can manage website content and items through Supabase functions.</span></li>
-            <li><span class="mark ok">Y</span><span>Orders update live through Supabase realtime.</span></li>
-          </ul>
-        </article>
-        <article class="card">
-          <span class="status partial">PARTIAL</span>
-          <h3>Works but needs setup/testing</h3>
-          <ul class="list">
-            <li><span class="mark mid">!</span><span>Push notifications need VAPID keys, Supabase secrets, and deployed functions.</span></li>
-            <li><span class="mark mid">!</span><span>Receipts can be saved as PDF using browser print, but are not emailed automatically yet.</span></li>
-            <li><span class="mark mid">!</span><span>Location is text-based on shop info; nearest-shop sorting is not fully implemented.</span></li>
-            <li><span class="mark mid">!</span><span>Admin account creation/deletion is intentionally limited until Supabase Auth admin actions are added.</span></li>
-          </ul>
-        </article>
-        <article class="card">
-          <span class="status todo">CANNOT YET</span>
-          <h3>Not ready for production claims</h3>
-          <ul class="list">
-            <li><span class="mark no">N</span><span>No mobile money payment collection inside the app yet.</span></li>
-            <li><span class="mark no">N</span><span>No affiliate commission system yet.</span></li>
-            <li><span class="mark no">N</span><span>No verification badge payment/approval workflow yet.</span></li>
-            <li><span class="mark no">N</span><span>No jobs board yet.</span></li>
-            <li><span class="mark no">N</span><span>No AI recommendations, fraud detection, or automated support yet.</span></li>
-          </ul>
-        </article>
+        <article class="card"><span class="status done">LIVE</span><h3>Home marketplace UI</h3><p>Responsive home page, full desktop layout, mobile-friendly app feel, categories, shops, featured listings, and cart button.</p></article>
+        <article class="card"><span class="status done">LIVE</span><h3>Buyer browsing</h3><p>Buyers can browse products without needing an account, visit shops, open product pages, and add items to cart.</p></article>
+        <article class="card"><span class="status done">LIVE</span><h3>Seller shops</h3><p>Sellers can create/manage shops, choose business category, add products, upload images, set availability, and mark prices negotiable.</p></article>
+        <article class="card"><span class="status done">LIVE</span><h3>Shop codes</h3><p>Readable shop IDs are category-based, for example <code>GE-01</code> for Garuga Electronics and similar category prefixes.</p></article>
+        <article class="card"><span class="status done">LIVE</span><h3>Cart system</h3><p>Cart page calculates totals, groups by shop, supports quantities, and can split multi-shop checkout into separate orders.</p></article>
+        <article class="card"><span class="status done">LIVE</span><h3>Pickup or delivery</h3><p>Buyers can choose delivery or physical pickup. Delivery categories include boda, car, and truck/big car.</p></article>
+        <article class="card"><span class="status done">LIVE</span><h3>Delivery workflow</h3><p>Delivery users have dashboards for available/active deliveries, fee negotiation, and delivery confirmation code flow.</p></article>
+        <article class="card"><span class="status done">LIVE</span><h3>In-app chat</h3><p>Product chat, general shop chat, message center, realtime messages, offer action, pickup booking action, and delivery request action.</p></article>
+        <article class="card"><span class="status done">LIVE</span><h3>Cloudflare image backend</h3><p>Product image uploads now try Cloudflare Pages Functions + R2 first, with ImgBB fallback while the platform stabilizes.</p></article>
+        <article class="card"><span class="status done">LIVE</span><h3>Admin control center</h3><p>Admin section can view/manage shops, users, products, orders, reports, website content, and deployment helper actions.</p></article>
+        <article class="card"><span class="status partial">PARTIAL</span><h3>Anti-fraud foundation</h3><p>Pickup/delivery codes, reports table, trust/risk fields, admin notes, suspended shops, and verification statuses exist. Automation is still pending.</p></article>
+        <article class="card"><span class="status partial">PARTIAL</span><h3>Push notifications</h3><p>Push subscription system and send-push function exist. Needs ongoing live-device testing and notification permission UX polish.</p></article>
       </div>
     </section>
 
-    <section id="remaining" class="panel">
+    <section id="percentages" class="panel">
       <div class="section-head">
-        <h2>Remaining work from the original vision</h2>
-        <p>Reference: the older <code>garuga.html</code> City OS plan.</p>
+        <h2>Feature progress percentages</h2>
+        <p>These are practical build estimates, not marketing claims.</p>
       </div>
       <div class="table">
         <table>
-          <thead>
-            <tr>
-              <th>Vision item</th>
-              <th>Current progress</th>
-              <th>Remaining action</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Area</th><th>Progress</th><th>Status</th><th>What remains</th></tr></thead>
           <tbody>
-            <tr>
-              <td>Register shop with profile</td>
-              <td>Mostly done</td>
-              <td>Test seller onboarding on live Supabase and add better first-time setup guidance.</td>
-            </tr>
-            <tr>
-              <td>Unique QR code per shop</td>
-              <td>Not done</td>
-              <td>Add QR generation for <code>/shop/:shopCode</code> and a seller download/share button.</td>
-            </tr>
-            <tr>
-              <td>Browse by category, see shops first</td>
-              <td>Partial</td>
-              <td>Home shows shops and products; next step is category pages that show shops first.</td>
-            </tr>
-            <tr>
-              <td>Nearest shops load first</td>
-              <td>Not done</td>
-              <td>Add shop latitude/longitude and sort by user location.</td>
-            </tr>
-            <tr>
-              <td>Order and pay via mobile money</td>
-              <td>Ordering done, payment not done</td>
-              <td>Add MTN/Airtel/Flutterwave payment flow and mark paid orders.</td>
-            </tr>
-            <tr>
-              <td>Affiliate links and commissions</td>
-              <td>Not done</td>
-              <td>Add referral codes, tracked links, commission table, and payout states.</td>
-            </tr>
-            <tr>
-              <td>Delivery registration and live status</td>
-              <td>Partial</td>
-              <td>Delivery users and tracking exist; auto-assignment and earnings still remain.</td>
-            </tr>
-            <tr>
-              <td>Jobs board</td>
-              <td>Not done</td>
-              <td>Add jobs table, job posting form, worker profiles, and employer search.</td>
-            </tr>
-            <tr>
-              <td>Admin analytics and moderation</td>
-              <td>Partial</td>
-              <td>Add revenue/order analytics, seller verification, and flagged listing moderation.</td>
-            </tr>
-            <tr>
-              <td>AI integration</td>
-              <td>Not done</td>
-              <td>Phase 2: recommendations, fraud checks, support assistant, and job matching.</td>
-            </tr>
+            <tr><td>Hosting + domain</td><td>95%</td><td>Cloudflare live</td><td>Final cache/service-worker polish and monitoring.</td></tr>
+            <tr><td>Supabase backend</td><td>85%</td><td>Strong MVP</td><td>Security tightening after admin bypass, indexes, policy audit.</td></tr>
+            <tr><td>Buyer marketplace</td><td>82%</td><td>Usable</td><td>Better filters, search ranking, category pages, nearest shops.</td></tr>
+            <tr><td>Seller dashboard</td><td>80%</td><td>Usable</td><td>Bulk editing, better product analytics, shop QR downloads.</td></tr>
+            <tr><td>Cart + orders</td><td>78%</td><td>Working MVP</td><td>Payment state, order cancellation, better receipt sharing.</td></tr>
+            <tr><td>Chat + negotiation</td><td>70%</td><td>New core system</td><td>Unread counts, typing indicators, attachments, real transaction conversion.</td></tr>
+            <tr><td>Delivery system</td><td>66%</td><td>Functional start</td><td>Auto matching, delivery earnings, route/location tooling.</td></tr>
+            <tr><td>Admin system</td><td>72%</td><td>Control center started</td><td>Secure admin roles, audit logs, analytics dashboard.</td></tr>
+            <tr><td>Anti-fraud</td><td>48%</td><td>Foundation only</td><td>Automated risk flags, blocked patterns, dispute workflows, reputation scoring.</td></tr>
+            <tr><td>Payments/escrow</td><td>8%</td><td>Future</td><td>Mobile money/payment provider, wallet/escrow rules, settlement records.</td></tr>
+            <tr><td>AI features</td><td>0%</td><td>Future</td><td>Support bot, recommendations, fraud checks, auto categorization.</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <section id="reference" class="panel">
+    <section id="remaining" class="panel">
       <div class="section-head">
-        <h2>Updated blueprint vs garuga.html</h2>
-        <p>The original file still says Firebase and <code>garuga.web.app</code>. The current real stack has changed.</p>
+        <h2>Remaining Phase One work</h2>
+        <p>This is what takes Garuga from MVP to a polished first public launch.</p>
       </div>
       <div class="grid">
-        <article class="card">
-          <span class="status done">CURRENT</span>
-          <h3>Frontend</h3>
-          <p>React with Vite, PWA service worker, compact marketplace cards, role dashboards.</p>
-        </article>
-        <article class="card">
-          <span class="status done">CURRENT</span>
-          <h3>Backend</h3>
-          <p>Supabase Postgres, Auth, Realtime, Edge Functions, Row Level Security.</p>
-        </article>
-        <article class="card">
-          <span class="status done">CURRENT</span>
-          <h3>Hosting</h3>
-          <p>Cloudflare Pages. Domain target is <code>garuga.online</code>.</p>
-        </article>
-        <article class="card">
-          <span class="status partial">CURRENT</span>
-          <h3>Images</h3>
-          <p>ImgBB upload remains in place. A future upgrade could move media storage to Supabase Storage.</p>
-        </article>
-        <article class="card">
-          <span class="status partial">CURRENT</span>
-          <h3>Payments</h3>
-          <p>Payment providers are still future work. Orders are bookings/requests for now.</p>
-        </article>
-        <article class="card">
-          <span class="status partial">CURRENT</span>
-          <h3>Discovery model</h3>
-          <p>Shop pages and category shops exist, but true nearest-shop-first discovery remains a key missing piece.</p>
-        </article>
+        <article class="card"><span class="status next">NEXT</span><h3>Chat to transaction conversion</h3><ul class="list"><li><span class="mark mid">!</span><span>Make offer should create a structured offer record.</span></li><li><span class="mark mid">!</span><span>Book pickup should create a real booking/order record.</span></li><li><span class="mark mid">!</span><span>Request delivery should connect to delivery dashboard.</span></li></ul></article>
+        <article class="card"><span class="status next">NEXT</span><h3>Professional chat polish</h3><ul class="list"><li><span class="mark mid">!</span><span>Unread message badges.</span></li><li><span class="mark mid">!</span><span>Search chats by shop/product/person.</span></li><li><span class="mark mid">!</span><span>Block/report user from chat.</span></li></ul></article>
+        <article class="card"><span class="status next">NEXT</span><h3>Shop QR + sharing</h3><ul class="list"><li><span class="mark mid">!</span><span>Generate QR for every shop page.</span></li><li><span class="mark mid">!</span><span>Seller can download/share shop poster.</span></li><li><span class="mark mid">!</span><span>Printable local shop cards.</span></li></ul></article>
+        <article class="card"><span class="status next">NEXT</span><h3>Production hardening</h3><ul class="list"><li><span class="mark mid">!</span><span>Remove temporary admin bypass policies.</span></li><li><span class="mark mid">!</span><span>Test buyer/seller/delivery accounts end-to-end.</span></li><li><span class="mark mid">!</span><span>Confirm push notifications on real phones.</span></li></ul></article>
+        <article class="card"><span class="status todo">FUTURE</span><h3>Payments + escrow</h3><p>In the future, Garuga can hold money after chat deal confirmation, then release after pickup/delivery confirmation.</p></article>
+        <article class="card"><span class="status todo">FUTURE</span><h3>AI + automation</h3><p>Recommendations, fraud detection, support assistant, auto categorization, and seller growth insights come after the core marketplace is stable.</p></article>
       </div>
     </section>
 
     <section id="launch" class="panel">
       <div class="section-head">
-        <h2>Do not publish before these are checked</h2>
-        <p>This is the shortest serious pre-launch checklist.</p>
+        <h2>Launch checklist</h2>
+        <p>Do these before inviting many real users.</p>
       </div>
-      <div class="callout">
-        The app can launch as a local ordering and shop catalogue MVP. Do not market it as fully paid, AI-powered, affiliate-enabled, or nearest-shop automated until those features are finished.
-      </div>
+      <div class="callout">Business truth: Garuga is strong enough to test with a small controlled group of shops and buyers. It is not yet ready to promise escrow, automated delivery matching, or AI fraud protection.</div>
       <div class="grid">
-        <article class="card">
-          <span class="status next">SETUP</span>
-          <h3>Cloudflare Pages env variables</h3>
-          <ul class="list">
-            <li><span class="mark mid">!</span><span><code>VITE_SUPABASE_URL</code></span></li>
-            <li><span class="mark mid">!</span><span><code>VITE_SUPABASE_ANON_KEY</code></span></li>
-            <li><span class="mark mid">!</span><span><code>VITE_VAPID_PUBLIC_KEY</code></span></li>
-            <li><span class="mark mid">!</span><span><code>VITE_IMGBB_API_KEY</code></span></li>
-          </ul>
-        </article>
-        <article class="card">
-          <span class="status next">SETUP</span>
-          <h3>Supabase secrets</h3>
-          <ul class="list">
-            <li><span class="mark mid">!</span><span><code>ADMIN_KEY_HASH</code></span></li>
-            <li><span class="mark mid">!</span><span><code>SUPABASE_SERVICE_ROLE_KEY</code></span></li>
-            <li><span class="mark mid">!</span><span><code>VAPID_PUBLIC_KEY</code></span></li>
-            <li><span class="mark mid">!</span><span><code>VAPID_PRIVATE_KEY</code></span></li>
-            <li><span class="mark mid">!</span><span><code>VAPID_SUBJECT</code></span></li>
-          </ul>
-        </article>
-        <article class="card">
-          <span class="status next">DEPLOY</span>
-          <h3>Supabase functions</h3>
-          <ul class="list">
-            <li><span class="mark mid">!</span><span><code>verify-admin-key</code></span></li>
-            <li><span class="mark mid">!</span><span><code>admin-api</code></span></li>
-            <li><span class="mark mid">!</span><span><code>send-push</code></span></li>
-          </ul>
-        </article>
-        <article class="card">
-          <span class="status next">TEST</span>
-          <h3>Manual launch test</h3>
-          <ul class="list">
-            <li><span class="mark mid">!</span><span>Buyer signup, seller signup, delivery signup.</span></li>
-            <li><span class="mark mid">!</span><span>Seller creates shop, adds location and products.</span></li>
-            <li><span class="mark mid">!</span><span>Buyer adds quantities to cart and checks out.</span></li>
-            <li><span class="mark mid">!</span><span>Seller accepts order, delivery completes it, buyer sees receipt.</span></li>
-            <li><span class="mark mid">!</span><span>Admin key opens admin panel and saves website content.</span></li>
-          </ul>
-        </article>
+        <article class="card"><span class="status done">DONE</span><h3>Cloudflare setup</h3><ul class="list"><li><span class="mark ok">Y</span><span>Pages deploy works.</span></li><li><span class="mark ok">Y</span><span>Supabase env variables work.</span></li><li><span class="mark ok">Y</span><span>R2 image binding works.</span></li></ul></article>
+        <article class="card"><span class="status partial">TEST</span><h3>Account flow</h3><ul class="list"><li><span class="mark mid">!</span><span>Create buyer test account.</span></li><li><span class="mark mid">!</span><span>Create seller test account.</span></li><li><span class="mark mid">!</span><span>Create delivery test account.</span></li></ul></article>
+        <article class="card"><span class="status partial">TEST</span><h3>Marketplace flow</h3><ul class="list"><li><span class="mark mid">!</span><span>Seller creates shop and product with image.</span></li><li><span class="mark mid">!</span><span>Buyer chats with shop and product seller.</span></li><li><span class="mark mid">!</span><span>Buyer uses cart checkout with delivery/pickup.</span></li></ul></article>
+        <article class="card"><span class="status partial">TEST</span><h3>Trust flow</h3><ul class="list"><li><span class="mark mid">!</span><span>Pickup code works in real use.</span></li><li><span class="mark mid">!</span><span>Delivery code works in real use.</span></li><li><span class="mark mid">!</span><span>Reports/admin review flow works.</span></li></ul></article>
       </div>
     </section>
   </main>
 
-  <footer>
-    Garuga Marketplace progress snapshot. Update this file when major features change.
-  </footer>
+  <footer>Garuga Marketplace progress snapshot. Phase One estimate: 78% complete as of May 27, 2026.</footer>
 
   <script>
     const tabs = document.querySelectorAll('.tab');
     const panels = document.querySelectorAll('.panel');
-
     tabs.forEach((tab) => {
       tab.addEventListener('click', () => {
         const target = tab.dataset.tab;
